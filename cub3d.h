@@ -14,6 +14,9 @@
 # define CUB3D_H
 # include <mlx.h>
 # include <stdio.h>
+# include <unistd.h>
+# include <stdlib.h>
+# include <fcntl.h>
 /*# include <math.h>
 # define mapWidth 24
 # define mapHeight 24
@@ -21,15 +24,28 @@
 # define screenHeight 480*/
 
 typedef struct	s_ptr {
-	void *mlx_ptr;
-	void *win_ptr;
+	void	*mlx_ptr;
+	void	*win_ptr;
+	int		x;
+	int		y;
+	int		size_x;
+	int		size_y;
+	char	**map;
 }				t_ptr;
 
-/*typedef struct	s_pos {
-	double posX;
-	double posY;
-	double dirX;
-	double dirY;
-}				t_pos;*/
+typedef struct	s_pos {
+	double	posX;
+	double	posY;
+	double	dirX;
+	double	dirY;
+}				t_pos;
+
+char		**ft_split(char const *s, char c);
+int			ft_strlen(const char *src);
+char		*ft_strjoin(char const *cache, char const *buff);
+int			ft_free(char **cache);
+char		*ft_strndup(const char *s, size_t n);
+void		ft_bzero(void *src, size_t n);
+t_ptr		*parser(char **argv);
 
 #endif

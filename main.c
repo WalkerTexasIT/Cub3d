@@ -14,34 +14,44 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
-int		print(int key, t_ptr *ptr)
+/*int		print(int key, t_ptr *ptr)
 {
-	int	x;
-	int	y;
-
-	x = 0;
-	y = 0;
 	if (key == 125)
-		y++;
+		ptr->y++;
 	else if (key == 123)
-		x--;
+		ptr->x--;
 	else if (key == 124)
-		x++;
+		ptr->x++;
 	else if (key == 126)
-		y--;
+		ptr->y--;
 	else
 		return (0);
-	mlx_pixel_put(ptr->mlx_ptr, ptr->win_ptr, x, y, 255);
-	return (1);
+	mlx_pixel_put(ptr->mlx_ptr, ptr->win_ptr, ptr->x, ptr->y, 255);
+	return (0);
 }
 
-int		main(void)
+int		init(void)
 {
 	t_ptr	ptr;
 
+	ptr.size_x = 640;
+	ptr.size_y = 480;
+	ptr.x = (ptr.size_x / 2);
+	ptr.x = (ptr.size_y / 2);
 	ptr.mlx_ptr = mlx_init();
 	ptr.win_ptr = mlx_new_window(ptr.mlx_ptr, 640, 480, "CashGame");
 	mlx_hook(ptr.win_ptr, 2, 0, print, &ptr);
 	mlx_loop(ptr.mlx_ptr);
+	return (0);
+}*/
+
+int		main(int argc, char **argv)
+{
+	t_ptr	*map;
+
+	if (argc < 2)
+		return (0);
+	map = parser(argv);
+	printf("%s", map->map[0]);
 	return (0);
 }
