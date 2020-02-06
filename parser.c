@@ -113,10 +113,9 @@ int			sizex(char **cub, int i)
 	return (n);
 }
 
-t_ptr		*check(char **cub)
+void		check(char **cub, t_ptr *ptr)
 {
 	int		i;
-	t_ptr	*ptr;
 
 	i = 0;
 	while (cub[i][0] != '\0' && ptr->map != 0)
@@ -130,10 +129,9 @@ t_ptr		*check(char **cub)
 			ptr->map = map(cub, i);
 		i++;
 	}
-	return (ptr);
 }
 
-t_ptr		*parser(char **argv)
+void		parser(char **argv, t_ptr *ptr)
 {
 	int		fd;
 	int		n;
@@ -146,12 +144,12 @@ t_ptr		*parser(char **argv)
 	while ((n = read(fd, buff, 32)) > 0)
 	{
 		buff[n] = '\0';
-		if (!(temp = ft_strjoin(cache, buff)))
-			return (0);
+		temp = ft_strjoin(cache, buff);
 		ft_free(&cache);
 		cache = temp;
 	}
+	printf("%s\n", cache);
 	cub = ft_split(cache, '\n');
 	ft_free(&cache);
-	return (check(cub));
+	check(cub, ptr);
 }

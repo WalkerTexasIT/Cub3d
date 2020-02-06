@@ -46,6 +46,6 @@ char		*ft_strjoin(char const *cache, char const *buff);
 int			ft_free(char **cache);
 char		*ft_strndup(const char *s, size_t n);
 void		ft_bzero(void *src, size_t n);
-t_ptr		*parser(char **argv);
+void		parser(char **argv, t_ptr *ptr);
 
 #endif
