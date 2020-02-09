@@ -43,18 +43,17 @@ int		init(t_ptr *ptr)
 
 int		main(int argc, char **argv)
 {
-	t_ptr	*map;
+	t_ptr	map;
 
 	if (argc < 2)
 		return (0); 
-	map->mlx_ptr = 0;
-	map->win_ptr = 0;
-	map->x = 0;
-	map->y = 0;
-	map->size_x = 0;
-	map->size_y = 0;
-	map->map = 0;
-	parser(argv, map);
-	printf("%d\n", map->size_x);
+	map.mlx_ptr = 0;
+	map.win_ptr = 0;
+	map.x = 0;
+	map.y = 0;
+	map.size_x = 0;
+	map.size_y = 0;
+	map.map = 0;
+	parser(argv, &map);
 	return (0);
 }

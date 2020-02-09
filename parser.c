@@ -131,25 +131,26 @@ void		check(char **cub, t_ptr *ptr)
 	}
 }
 
+char		**get_line(int fd)
+{
+	char	**map;
+	char	buff[10001];
+	int		n;
+
+	n = read(fd, buff, 10000);
+	buff[n] = '\0';
+	map = ft_split(buff, '\n');
+	return (map);
+}
+
 void		parser(char **argv, t_ptr *ptr)
 {
 	int		fd;
-	int		n;
-	char	*buff;
-	char	*cache;
-	char	*temp;
-	char	**cub;
+	char	**map;
 
 	fd = open(argv[1], O_RDONLY);
-	while ((n = read(fd, buff, 32)) > 0)
-	{
-		buff[n] = '\0';
-		temp = ft_strjoin(cache, buff);
-		ft_free(&cache);
-		cache = temp;
-	}
-	printf("%s\n", cache);
-	cub = ft_split(cache, '\n');
-	ft_free(&cache);
-	check(cub, ptr);
+	map = get_line(fd);
+	check(map, ptr);
+	if (ptr->map == 0)
+		printf("test\n");
 }

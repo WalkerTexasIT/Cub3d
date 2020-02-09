@@ -12,16 +12,6 @@
 
 #include "cub3d.h"
 
-int			ft_free(char **cache)
-{
-	if (*cache)
-	{
-		free(*cache);
-		*cache = 0;
-	}
-	return (0);
-}
-
 int			ft_strlen(const char *src)
 {
 	int n;
@@ -56,5 +46,32 @@ char		*ft_strjoin(char const *cache, char const *buff)
 		i++;
 	}
 	dest[n + i] = '\0';
+	return (dest);
+}
+
+char		*ft_substr(char const *s, unsigned int start, size_t len)
+{
+	char			*dest;
+	int				n;
+
+	if (s == 0)
+		return (0);
+	if (start > ft_strlen(s))
+	{
+		if (!(dest = (char*)malloc(sizeof(char) * 1)))
+			return (0);
+		dest[0] = '\0';
+		return (dest);
+	}
+	if (!(dest = (char*)malloc(sizeof(char) * (len + 1))))
+		return (0);
+	n = 0;
+	while (s[start] != '\0' && len > (unsigned long)n)
+	{
+		dest[n] = s[start];
+		n++;
+		start++;
+	}
+	dest[n] = '\0';
 	return (dest);
 }

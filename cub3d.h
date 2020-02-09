@@ -40,12 +40,12 @@ typedef struct	s_pos {
 	double	dirY;
 }				t_pos;
 
-char		**ft_split(char const *s, char c);
 int			ft_strlen(const char *src);
 char		*ft_strjoin(char const *cache, char const *buff);
-int			ft_free(char **cache);
 char		*ft_strndup(const char *s, size_t n);
 void		ft_bzero(void *src, size_t n);
 void		parser(char **argv, t_ptr *ptr);
+char		*ft_substr(char const *s, unsigned int start, size_t len);
+char		**ft_split(char const *s, char c);
 
 #endif
