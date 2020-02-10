@@ -14,6 +14,12 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+void	dda(t_pos *pos)
+{
+	int		n;
+	double	
+}
+
 int		print(int key, t_ptr *ptr)
 {
 	if (key == 125)
@@ -44,16 +50,10 @@ int		init(t_ptr *ptr)
 int		main(int argc, char **argv)
 {
 	t_ptr	map;
+	t_pos	pos;
 
 	if (argc < 2)
-		return (0); 
-	map.mlx_ptr = 0;
-	map.win_ptr = 0;
-	map.x = 0;
-	map.y = 0;
-	map.size_x = 0;
-	map.size_y = 0;
-	map.map = 0;
-	parser(argv, &map);
+		return (0);
+	parser(argv, &map, &pos);
 	return (0);
 }

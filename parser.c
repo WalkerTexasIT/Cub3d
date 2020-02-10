@@ -12,6 +12,32 @@
 
 #include "cub3d.h"
 
+void		define(char c, t_pos *pos, int a, int b)
+{
+	if (c == 'N')
+	{
+		pos->dirX = 1;
+		pos->dirY = 0;
+	}
+	if (c == 'E')
+	{
+		pos->dirX = 0;
+		pos->dirY = 1;
+	}
+	if (c == 'S')
+	{
+		pos->dirX = -1;
+		pos->dirY = 0;
+	}
+	if (c == 'W')
+	{
+		pos->dirX = 0;
+		pos->dirY = -1;
+	}
+	pos->posX = (double)a;
+	pos->posY = (double)b;
+}
+
 int			count(char *cub)
 {
 	int i;
@@ -32,7 +58,7 @@ int			countline(char **cub, int i)
 {
 	int n;
 
-	while (cub[i][0] != '\0')
+	while (cub[i] != 0)
 	{
 		i++;
 		n++;
@@ -40,38 +66,37 @@ int			countline(char **cub, int i)
 	return (n + 1);
 }
 
-char		**map(char **cub, int i)
+char		**map(char **cub, int i, t_ptr *ptr, t_pos *pos)
 {
 	int		j;
 	char	**map;
+	int		a;
+	int		b;
 
-	j = 0;
+	a = 0;
 	if (!(map = (char**)malloc(sizeof(char*) * countline(cub, i))))
 		return (0);
-	while (cub[i][0] != '\0')
+	while (cub[i] != 0)
 	{
-		if (!(*map = (char*)malloc(sizeof(char) * count(cub[i]))))
+		j = 0;
+		b = 0;
+		if (!(map[a] = (char*)malloc(sizeof(char) * count(cub[i]))))
 			return (0);
-		if (cub[i][j] == '1' || cub[i][j] == '0' || cub[i][j] == '2')
+		while (cub[i][j] != '\0')
 		{
-			**map = cub[i][j];
-			(**map)++;
+			if (cub[i][j] == '0' || cub[i][j] == '1' || cub[i][j] == '2')
+				map[a][b++] = cub[i][j];
+			if (cub[i][j] == 'N' || cub[i][j] == 'S' || cub[i][j] == 'E' ||cub[i][j] == 'W')
+			{
+				define(cub[i][j], pos, a, b);
+				map[a][b++] = '0';
+			}
 			j++;
 		}
-		else if (cub[i][j] == 'N' || cub[i][j] == 'S' || cub[i][j] == 'E' || cub[i][j] == 'W')
-		{
-			**map = cub[i][j];
-			(**map)++;
-			j++;
-		}
-		else
-		{
-			(*map)++;
-			i++;
-			j = 0;
-		}
+		a++;
+		i++;
 	}
-	return (cub);
+	return (map);
 }
 
 int			sizey(char **cub, int i)
@@ -113,12 +138,12 @@ int			sizex(char **cub, int i)
 	return (n);
 }
 
-void		check(char **cub, t_ptr *ptr)
+void		check(char **cub, t_ptr *ptr, t_pos *pos)
 {
 	int		i;
 
 	i = 0;
-	while (cub[i][0] != '\0' && ptr->map != 0)
+	while (cub[i][0] != '\0' && ptr->map == 0)
 	{
 		if (cub[i][0] == 'R')
 		{
@@ -126,7 +151,7 @@ void		check(char **cub, t_ptr *ptr)
 			ptr->size_y = sizey(cub, i);
 		}
 		else if (cub[i][0] == '1')
-			ptr->map = map(cub, i);
+			ptr->map = map(cub, i, ptr, pos);
 		i++;
 	}
 }
@@ -143,14 +168,13 @@ char		**get_line(int fd)
 	return (map);
 }
 
-void		parser(char **argv, t_ptr *ptr)
+void		parser(char **argv, t_ptr *ptr, t_pos *pos)
 {
 	int		fd;
 	char	**map;
 
 	fd = open(argv[1], O_RDONLY);
 	map = get_line(fd);
-	check(map, ptr);
-	if (ptr->map == 0)
-		printf("test\n");
+	check(map, ptr, pos);
+	printf("%s", ptr->map[5]);
 }

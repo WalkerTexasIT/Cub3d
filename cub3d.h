@@ -17,11 +17,7 @@
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
-/*# include <math.h>
-# define mapWidth 24
-# define mapHeight 24
-# define screenWidth 640
-# define screenHeight 480*/
+# include <math.h>
 
 typedef struct	s_ptr {
 	void	*mlx_ptr;
@@ -44,7 +40,7 @@ int			ft_strlen(const char *src);
 char		*ft_strjoin(char const *cache, char const *buff);
 char		*ft_strndup(const char *s, size_t n);
 void		ft_bzero(void *src, size_t n);
-void		parser(char **argv, t_ptr *ptr);
+void		parser(char **argv, t_ptr *ptr, t_pos *pos);
 char		*ft_substr(char const *s, unsigned int start, size_t len);
 char		**ft_split(char const *s, char c);
 
