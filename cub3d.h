@@ -34,6 +34,8 @@ typedef struct	s_pos {
 	double	posY;
 	double	dirX;
 	double	dirY;
+	double	rayDirX;
+	double	rayDirY;
 }				t_pos;
 
 int			ft_strlen(const char *src);
