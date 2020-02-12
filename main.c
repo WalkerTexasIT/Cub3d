@@ -36,7 +36,37 @@ int		print(int key, t_ptr *ptr)
 	return (0);
 }
 
-int		init(t_ptr *ptr)
+int		algo(t_ptr *ptr, t_pos *pos)
+{
+	int		x;
+	double	cameraX;
+
+	pos->planeX = 0;
+	pos->planeY = 0.66;
+	x = -1;
+	while (++x < ptr->size_x)
+	{
+		cameraX = 2 * (double)x / (double)ptr->size_x - 1;
+		pos->rayDirX = pos->dirX + pos->planeX * cameraX;
+		pos->rayDirY = pos->dirY + pos->planeY * cameraX;
+		mapX = posY;
+		mapY = posX;
+		pos->deltaDistX = sqrt(1 + (pos->rayDirY * pos->rayDirY) / (pos->rayDirX * pos->rayDirX));
+		pos->deltaDistY = sqrt(1 + (pos->rayDirX * pos->rayDirX) / (pos->rayDirY * pos->rayDirY));
+		if (pos->rayDirX < 0)
+		{
+			pos->stepX = -1;
+			pos->sideDistX = (pos->posX - (double)pos->mapX) * pos->deltaDistX;
+		}
+		else
+		{
+			pos->stepX = 1;
+			pos->sideDistX = ((double)mapX)
+		}
+	}
+}
+
+int		init(t_ptr *ptr, t_pos *pos)
 {
 	ptr->x = (ptr->size_x / 2);
 	ptr->x = (ptr->size_y / 2);
@@ -44,7 +74,6 @@ int		init(t_ptr *ptr)
 	ptr->win_ptr = mlx_new_window(ptr->mlx_ptr, 640, 480, "CashGame");
 	if (mlx_hook(ptr->win_ptr, 2, 0, print, ptr) == -1)
 		return (-1);
-	printf("test\n");
 	mlx_loop(ptr->mlx_ptr);
 	return (0);
 }
@@ -57,7 +86,7 @@ int		main(int argc, char **argv)
 	if (argc < 2)
 		return (0);
 	//parser(argv, &map, &pos);
-	if (init(&map) == -1)
+	if (init(&map, &pos) == -1)
 		return (0);
 	return (0);
 }
