@@ -176,5 +176,4 @@ void		parser(char **argv, t_ptr *ptr, t_pos *pos)
 	fd = open(argv[1], O_RDONLY);
 	map = get_line(fd);
 	check(map, ptr, pos);
-	printf("%s", ptr->map[5]);
 }

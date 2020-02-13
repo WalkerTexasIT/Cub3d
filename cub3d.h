@@ -46,6 +46,11 @@ typedef struct	s_pos {
 	double	sideDistY;
 	int		stepX;
 	int		stepY;
+	int		side;
+	double	perpWallDist;
+	int		lineHeight;
+	int		drawStart;
+	int		drawEnd;
 }				t_pos;
 
 int				ft_strlen(const char *src);
