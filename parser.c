@@ -16,26 +16,26 @@ void		define(char c, t_pos *pos, int a, int b)
 {
 	if (c == 'N')
 	{
+		pos->dirX = 0;
+		pos->dirY = -1;
+	}
+	if (c == 'E')
+	{
 		pos->dirX = 1;
 		pos->dirY = 0;
 	}
-	if (c == 'E')
+	if (c == 'S')
 	{
 		pos->dirX = 0;
 		pos->dirY = 1;
 	}
-	if (c == 'S')
+	if (c == 'W')
 	{
 		pos->dirX = -1;
 		pos->dirY = 0;
 	}
-	if (c == 'W')
-	{
-		pos->dirX = 0;
-		pos->dirY = -1;
-	}
-	pos->posX = (double)a;
-	pos->posY = (double)b;
+	pos->posX = (double)a + 0.5;
+	pos->posY = (double)b + 0.5;
 }
 
 int			count(char *cub)
