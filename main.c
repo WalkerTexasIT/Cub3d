@@ -14,13 +14,13 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
-int		printline(int x, int start, int end, t_ptr *ptr)
+int		printline(int x, t_pos *pos, t_ptr *ptr)
 {
 	//printf("%d, %d, %d\n", x, start, end);
-	while (start <= end)
+	while (pos->drawStart <= pos->drawEnd)
 	{
-		mlx_pixel_put(ptr->mlx_ptr, ptr->win_ptr, x, start, 255);
-		start++;
+		mlx_pixel_put(ptr->mlx_ptr, ptr->win_ptr, x, pos->drawStart, 255);
+		pos->drawStart++;
 	}
 	return (0);
 }
@@ -93,7 +93,7 @@ int		algo(t_ptr *ptr, t_pos *pos)
 		pos->drawEnd = pos->lineHeight / 2 + ptr->size_y / 2;
 		if (pos->drawEnd >= ptr->size_y)
 			pos->drawEnd = ptr->size_y - 1;
-		printline(x, pos->drawStart, pos->drawEnd, ptr);
+		printline(x, pos, ptr);
 	}
 	return (0);
 }
@@ -102,9 +102,9 @@ int		init(t_ptr *ptr, t_pos *pos)
 {
 	ptr->mlx_ptr = mlx_init();
 	ptr->win_ptr = mlx_new_window(ptr->mlx_ptr, ptr->size_x, ptr->size_y, "CashGame");
-	/*if (mlx_hook(ptr->win_ptr, 2, 0, print, ptr) == -1)
-		return (-1);*/
 	algo(ptr, pos);
+	/*if (mlx_hook(ptr->win_ptr, 2, 0, press, ptr) == -1)
+		return (-1);*/
 	mlx_loop(ptr->mlx_ptr);
 	return (0);
 }

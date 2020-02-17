@@ -27,6 +27,7 @@ typedef struct	s_ptr {
 	int			size_x;
 	int			size_y;
 	char		**map;
+	t_pos		*pos;
 }				t_ptr;
 
 typedef struct	s_pos {
