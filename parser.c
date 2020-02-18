@@ -143,15 +143,15 @@ void		check(char **cub, t_ptr *ptr, t_pos *pos)
 	int		i;
 
 	i = 0;
-	while (cub[i][0] != '\0' && ptr->map == 0)
+	while (cub[i][0] != '\0' && pos->map == 0)
 	{
 		if (cub[i][0] == 'R')
 		{
-			ptr->size_x = sizex(cub, i);
-			ptr->size_y = sizey(cub, i);
+			pos->size_x = sizex(cub, i);
+			pos->size_y = sizey(cub, i);
 		}
 		else if (cub[i][0] == '1')
-			ptr->map = map(cub, i, ptr, pos);
+			pos->map = map(cub, i, ptr, pos);
 		i++;
 	}
 }

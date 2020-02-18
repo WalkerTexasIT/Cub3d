@@ -18,19 +18,21 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
+# define MoveSpeed 0.08
 
 typedef struct	s_ptr {
-	void		*mlx_ptr;
-	void		*win_ptr;
 	int			x;
 	int			y;
 	int			size_x;
 	int			size_y;
-	char		**map;
-	t_pos		*pos;
 }				t_ptr;
 
 typedef struct	s_pos {
+	int		size_x;
+	int		size_y;
+	void	*mlx_ptr;
+	void	*win_ptr;
+	char	**map;
 	double	posX;
 	double	posY;
 	double	dirX;
