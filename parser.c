@@ -34,8 +34,8 @@ void		define(char c, t_pos *pos, int a, int b)
 		pos->dirX = -1;
 		pos->dirY = 0;
 	}
-	pos->posX = (double)a + 0.5;
-	pos->posY = (double)b + 0.5;
+	pos->posX = (double)a - 0.5;
+	pos->posY = (double)b - 0.5;
 }
 
 int			count(char *cub)
@@ -47,8 +47,6 @@ int			count(char *cub)
 	n = 0;
 	while (cub[i] != '\0')
 	{
-		if (cub[i] != ' ')
-			n++;
 		i++;
 	}
 	return (n);
@@ -84,7 +82,7 @@ char		**map(char **cub, int i, t_ptr *ptr, t_pos *pos)
 			return (0);
 		while (cub[i][j] != '\0')
 		{
-			if (cub[i][j] == '0' || cub[i][j] == '1' || cub[i][j] == '2')
+			if (cub[i][j] == '0' || cub[i][j] == '1' || cub[i][j] == '2' || cub[i][j] == ' ')
 				map[a][b++] = cub[i][j];
 			if (cub[i][j] == 'N' || cub[i][j] == 'S' || cub[i][j] == 'E' ||cub[i][j] == 'W')
 			{

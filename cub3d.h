@@ -18,7 +18,7 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-# define MoveSpeed 0.08
+# define MoveSpeed 1
 
 typedef struct	s_ptr {
 	int			x;
@@ -63,5 +63,6 @@ void			ft_bzero(void *src, size_t n);
 void			parser(char **argv, t_ptr *ptr, t_pos *pos);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			**ft_split(char const *s, char c);
+void			ft_free_map(t_pos *pos);
 
 #endif

@@ -32,7 +32,7 @@ int		algo(t_pos *pos)
 	int		hit;
 
 	pos->planeX = 0.66;
-	pos->planeY = 0;
+	pos->planeY = 0.0;
 	x = -1;
 	while (++x < pos->size_x)
 	{
@@ -99,6 +99,7 @@ int		algo(t_pos *pos)
 
 int		initkey(int key, t_pos *pos)
 {
+	printf("%d\n", key);
 	if (key == 13) // W
 	{
 		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirX * MoveSpeed)] == '0')
@@ -106,7 +107,13 @@ int		initkey(int key, t_pos *pos)
 		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
 			pos->posY += pos->dirY * MoveSpeed;
 	}
-	//if (key == 2) // D
+	if (key == 2) // D
+	{
+		if (pos->map[(int)pos->posY][(int)(pos->posX + -pos->dirY * MoveSpeed)] == '0')
+			pos->posX += -pos->dirY * MoveSpeed;
+		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
+			pos->posY += -pos->dirX * MoveSpeed;
+	}
 	if (key == 1) // S
 	{
 		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirX * MoveSpeed)] == '0')
@@ -114,7 +121,19 @@ int		initkey(int key, t_pos *pos)
 		if (pos->map[(int)(pos->posY - pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
 			pos->posY -= pos->dirY * MoveSpeed;
 	}
-	//if (key == 0) // A*/
+	if (key == 0) // A
+	{
+		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirY * MoveSpeed)] == '0')
+			pos->posX += pos->dirY * MoveSpeed;
+		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
+			pos->posY += -pos->dirX * MoveSpeed;
+	}
+	if (key == 53) // ESC
+	{
+		ft_free_map(pos);
+		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
+		return (0);
+	}
 	mlx_clear_window(pos->mlx_ptr, pos->win_ptr);
 	algo(pos);
 	return (0);
