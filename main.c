@@ -130,9 +130,9 @@ int		initkey(int key, t_pos *pos)
 	}
 	if (key == 53) // ESC
 	{
-		ft_free_map(pos);
+		//ft_free_map(pos);
 		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
-		return (0);
+		exit(0);
 	}
 	mlx_clear_window(pos->mlx_ptr, pos->win_ptr);
 	algo(pos);
@@ -143,8 +143,10 @@ int		init(t_ptr *ptr, t_pos *pos)
 {
 	pos->mlx_ptr = mlx_init();
 	pos->win_ptr = mlx_new_window(pos->mlx_ptr, pos->size_x, pos->size_y, "CashGame");
+	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	algo(pos);
-	mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos);
+	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
+		return (-1);
 	mlx_loop(pos->mlx_ptr);
 	return (0);
 }

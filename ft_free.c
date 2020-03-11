@@ -19,7 +19,7 @@ void	ft_free_map(t_pos *pos)
 	i = 0;
 	if (pos->map)
 	{
-		while (pos->map[i])
+		while (pos->map[i] != 0)
 			free(pos->map[i++]);
 		free(pos->map);
 	}

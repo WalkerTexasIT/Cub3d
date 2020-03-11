@@ -32,6 +32,7 @@ typedef struct	s_pos {
 	int		size_y;
 	void	*mlx_ptr;
 	void	*win_ptr;
+	void	*img_ptr;
 	char	**map;
 	double	posX;
 	double	posY;
