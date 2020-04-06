@@ -41,21 +41,20 @@ void		define(char c, t_pos *pos, int a, int b)
 int			count(char *cub)
 {
 	int i;
-	int n;
 
 	i = 0;
-	n = 0;
 	while (cub[i] != '\0')
 	{
 		i++;
 	}
-	return (n);
+	return (i);
 }
 
 int			countline(char **cub, int i)
 {
 	int n;
 
+	n = 0;
 	while (cub[i] != 0)
 	{
 		i++;
@@ -72,6 +71,7 @@ char		**map(char **cub, int i, t_ptr *ptr, t_pos *pos)
 	int		b;
 
 	a = 0;
+	printf("%s\n", cub[12]);
 	if (!(map = (char**)malloc(sizeof(char*) * countline(cub, i))))
 		return (0);
 	while (cub[i] != 0)
@@ -141,15 +141,18 @@ void		check(char **cub, t_ptr *ptr, t_pos *pos)
 	int		i;
 
 	i = 0;
-	while (cub[i][0] != '\0' && pos->map == 0)
+	pos->map = 0;
+	while (pos->map == 0)
 	{
 		if (cub[i][0] == 'R')
 		{
-			pos->size_x = sizex(cub, i);
-			pos->size_y = sizey(cub, i);
+			//pos->size_x = sizex(cub, i);
+			//pos->size_y = sizey(cub, i);
 		}
 		else if (cub[i][0] == '1')
+		{
 			pos->map = map(cub, i, ptr, pos);
+		}
 		i++;
 	}
 }
