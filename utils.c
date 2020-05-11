@@ -75,3 +75,16 @@ char		*ft_substr(char const *s, unsigned int start, size_t len)
 	dest[n] = '\0';
 	return (dest);
 }
+
+int		get_color(char *s)
+{
+	int r;
+	int g;
+	int b;
+	int ret;
+
+	r = ft_atoi(s);
+	g = ft_atoi(s);
+	b = ft_atoi(s);
+	ret = (r * 65536) + (g * 256) + b;
+}

@@ -33,6 +33,8 @@ typedef struct	s_pos {
 	void	*mlx_ptr;
 	void	*win_ptr;
 	void	*img_ptr;
+	char	*charimg_data;
+	int		*img_data;
 	char	**map;
 	double	posX;
 	double	posY;
@@ -65,5 +67,6 @@ void			parser(char **argv, t_ptr *ptr, t_pos *pos);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			**ft_split(char const *s, char c);
 void			ft_free_map(t_pos *pos);
+int				ft_atoi(const char *str);
 
 #endif

@@ -16,11 +16,29 @@
 
 int		printline(int x, t_pos *pos)
 {
-	//printf("%d, %d, %d\n", x, start, end);
+	int i;
+	int n;
+
+	i = 0;
+	n = x;
+	while (i < pos->drawStart)
+	{
+		pos->img_data[n] = 0xbebebe;// C in .cub donc le parsing a faire !
+		n += pos->size_x;
+		i++;
+	}
 	while (pos->drawStart <= pos->drawEnd)
 	{
-		mlx_pixel_put(pos->mlx_ptr, pos->win_ptr, x, pos->drawStart, 255);
+		pos->img_data[n] = 255;
+		n += pos->size_x;
 		pos->drawStart++;
+		i++;
+	}
+	while (i < pos->size_y)
+	{
+		pos->img_data[n] = 0xdc6400; // F in .cub donc le parsing a faire !
+		n += pos->size_x;
+		i++;
 	}
 	return (0);
 }
@@ -94,6 +112,7 @@ int		algo(t_pos *pos)
 			pos->drawEnd = pos->size_y - 1;
 		printline(x, pos);
 	}
+	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
 	return (0);
 }
 
@@ -141,9 +160,15 @@ int		initkey(int key, t_pos *pos)
 
 int		init(t_ptr *ptr, t_pos *pos)
 {
+	int i;
+	int j;
+	int n;
+
 	pos->mlx_ptr = mlx_init();
 	pos->win_ptr = mlx_new_window(pos->mlx_ptr, pos->size_x, pos->size_y, "CashGame");
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
+	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
+	pos->img_data = (int*)pos->charimg_data;
 	algo(pos);
 	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
 		return (-1);
@@ -159,8 +184,8 @@ int		main(int argc, char **argv)
 	if (argc < 2)
 		return (0);
 	parser(argv, &map, &pos);
-	pos.size_x = 1920;
-	pos.size_y = 1080;
+	pos.size_x = 1080;
+	pos.size_y = 768;
 	if (init(&map, &pos) == -1)
 		return (0);
 	return (0);

@@ -71,7 +71,6 @@ char		**map(char **cub, int i, t_ptr *ptr, t_pos *pos)
 	int		b;
 
 	a = 0;
-	printf("%s\n", cub[12]);
 	if (!(map = (char**)malloc(sizeof(char*) * countline(cub, i))))
 		return (0);
 	while (cub[i] != 0)
@@ -149,6 +148,8 @@ void		check(char **cub, t_ptr *ptr, t_pos *pos)
 			//pos->size_x = sizex(cub, i);
 			//pos->size_y = sizey(cub, i);
 		}
+		/*else if (cub[i][0] == 'F')
+		else if (cub[i][0] == 'C')*/
 		else if (cub[i][0] == '1')
 		{
 			pos->map = map(cub, i, ptr, pos);
