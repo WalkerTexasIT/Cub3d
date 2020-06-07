@@ -87,4 +87,30 @@ int		get_color(char *s)
 	g = ft_atoi(s);
 	b = ft_atoi(s);
 	ret = (r * 65536) + (g * 256) + b;
+	return (ret);
+}
+
+void	rot(t_pos *pos, char RorL)
+{
+	double swipe1;
+	double swipe2;
+
+	if (RorL == 'R')
+	{
+		swipe1 = pos->dirX;
+		pos->dirX = (pos->dirX * cos(Rotate)) - (pos->dirY * sin(Rotate));
+		pos->dirY = (swipe1 * sin(Rotate)) + (pos->dirY * cos(Rotate));
+		swipe2 = pos->planeX;
+		pos->planeX = (pos->planeX * cos(Rotate)) - (pos->planeY * sin(Rotate));
+		pos->planeY = (swipe2 * sin(Rotate)) + (pos->planeY * cos(Rotate));
+	}
+	else
+	{
+		swipe1 = pos->dirX;
+		pos->dirX = (pos->dirX * cos(-Rotate)) - (pos->dirY * sin(-Rotate));
+		pos->dirY = (swipe1 * sin(-Rotate)) + (pos->dirY * cos(-Rotate));
+		swipe2 = pos->planeX;
+		pos->planeX = (pos->planeX * cos(-Rotate)) - (pos->planeY * sin(-Rotate));
+		pos->planeY = (swipe2 * sin(-Rotate)) + (pos->planeY * cos(-Rotate));
+	}
 }

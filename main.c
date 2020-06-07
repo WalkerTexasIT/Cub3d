@@ -21,6 +21,10 @@ int		printline(int x, t_pos *pos)
 
 	i = 0;
 	n = x;
+	/*if (x == 0)
+	{
+		printf("%d, %d\n", pos->stepX, pos->stepY);
+	}*/
 	while (i < pos->drawStart)
 	{
 		pos->img_data[n] = 0xbebebe;// C in .cub donc le parsing a faire !
@@ -49,8 +53,7 @@ int		algo(t_pos *pos)
 	double	cameraX;
 	int		hit;
 
-	pos->planeX = 0.66;
-	pos->planeY = 0.0;
+	printf("%f, %f, %f, %f\n", pos->dirX, pos->dirY, pos->planeX, pos->planeY);
 	x = -1;
 	while (++x < pos->size_x)
 	{
@@ -113,12 +116,13 @@ int		algo(t_pos *pos)
 		printline(x, pos);
 	}
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
+	//printf("%f, %f, %f, %f\n", pos->dirX, pos->dirY, pos->planeX, pos->planeY);
 	return (0);
 }
 
 int		initkey(int key, t_pos *pos)
 {
-	printf("%d\n", key);
+	//printf("%d\n", key);
 	if (key == 13) // W
 	{
 		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirX * MoveSpeed)] == '0')
@@ -147,6 +151,10 @@ int		initkey(int key, t_pos *pos)
 		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
 			pos->posY += -pos->dirX * MoveSpeed;
 	}
+	if (key == 124) // fleche droite
+		rot(pos, 'R');
+	if (key == 123) // fleche gauche
+		rot(pos, 'L');
 	if (key == 53) // ESC
 	{
 		//ft_free_map(pos);
@@ -169,6 +177,8 @@ int		init(t_ptr *ptr, t_pos *pos)
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
+	pos->planeX = 0.66;
+	pos->planeY = 0;
 	algo(pos);
 	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
 		return (-1);

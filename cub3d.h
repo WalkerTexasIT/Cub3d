@@ -18,7 +18,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-# define MoveSpeed 1
+# define MoveSpeed 0.1
+# define Rotate 0.05
 
 typedef struct	s_ptr {
 	int			x;
@@ -68,5 +69,6 @@ char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			**ft_split(char const *s, char c);
 void			ft_free_map(t_pos *pos);
 int				ft_atoi(const char *str);
+void			rot(t_pos *pos, char RorL);
 
 #endif
