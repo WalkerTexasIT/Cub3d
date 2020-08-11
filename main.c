@@ -14,33 +14,50 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+int		get_colors(t_pos *pos)
+{
+	if (pos->side == 0 && pos->rayDirX < 0)
+		return (0xd3d3d3); // light grey W
+	else if (pos->side == 0 && pos->rayDirX > 0)
+		return (0x6a5acd); // slate blue E
+	else if (pos->side == 1 && pos->rayDirY < 0)
+		return (0xffff); // cyan N
+	else if (pos->side == 1 && pos->rayDirY > 0)
+		return (0xffc0cb); // pink S 
+	else
+		return (0);
+	return (0);
+}
+
 int		printline(int x, t_pos *pos)
 {
 	int i;
 	int n;
+	int color;
 
 	i = 0;
 	n = x;
-	/*if (x == 0)
+	color = get_colors(pos);
+	if (x == 0)
 	{
 		printf("%d, %d\n", pos->stepX, pos->stepY);
-	}*/
+	}
 	while (i < pos->drawStart)
 	{
-		pos->img_data[n] = 0xbebebe;// C in .cub donc le parsing a faire !
+		pos->img_data[n] = pos->colorC;
 		n += pos->size_x;
 		i++;
 	}
 	while (pos->drawStart <= pos->drawEnd)
 	{
-		pos->img_data[n] = 255;
+		pos->img_data[n] = color;
 		n += pos->size_x;
 		pos->drawStart++;
 		i++;
 	}
 	while (i < pos->size_y)
 	{
-		pos->img_data[n] = 0xdc6400; // F in .cub donc le parsing a faire !
+		pos->img_data[n] = pos->colorF;
 		n += pos->size_x;
 		i++;
 	}
@@ -53,7 +70,7 @@ int		algo(t_pos *pos)
 	double	cameraX;
 	int		hit;
 
-	printf("%f, %f, %f, %f\n", pos->dirX, pos->dirY, pos->planeX, pos->planeY);
+	printf("Dir(%f, %f) Pos(%f, %f) Plane(%f, %f)\n", pos->dirX, pos->dirY, pos->posX, pos->posY, pos->planeX, pos->planeY);
 	x = -1;
 	while (++x < pos->size_x)
 	{
@@ -132,10 +149,10 @@ int		initkey(int key, t_pos *pos)
 	}
 	if (key == 2) // D
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX + -pos->dirY * MoveSpeed)] == '0')
+		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed)] == '0')
 			pos->posX += -pos->dirY * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
-			pos->posY += -pos->dirX * MoveSpeed;
+		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed)][(int)pos->posX] == '0')
+			pos->posY += pos->dirX * MoveSpeed;
 	}
 	if (key == 1) // S
 	{
@@ -157,7 +174,7 @@ int		initkey(int key, t_pos *pos)
 		rot(pos, 'L');
 	if (key == 53) // ESC
 	{
-		//ft_free_map(pos);
+		ft_free_map(pos);
 		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 		exit(0);
 	}
@@ -177,8 +194,6 @@ int		init(t_ptr *ptr, t_pos *pos)
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
-	pos->planeX = 0.66;
-	pos->planeY = 0;
 	algo(pos);
 	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
 		return (-1);
@@ -194,8 +209,8 @@ int		main(int argc, char **argv)
 	if (argc < 2)
 		return (0);
 	parser(argv, &map, &pos);
-	pos.size_x = 1080;
-	pos.size_y = 768;
+	//pos.size_x = 1080;
+	//pos.size_y = 768;
 	if (init(&map, &pos) == -1)
 		return (0);
 	return (0);

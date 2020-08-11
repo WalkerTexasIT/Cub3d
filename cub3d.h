@@ -58,6 +58,8 @@ typedef struct	s_pos {
 	int		lineHeight;
 	int		drawStart;
 	int		drawEnd;
+	int		colorC;
+	int		colorF;
 }				t_pos;
 
 int				ft_strlen(const char *src);

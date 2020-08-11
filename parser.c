@@ -12,30 +12,73 @@
 
 #include "cub3d.h"
 
+int		colorForC(char *string)
+{
+	int color;
+	int r;
+	int g;
+	int b;
+
+	while ((*string < '0' || *string > '9') && *string != '\0')
+		string++;
+	r = 0;
+	g = 0;
+	b = 0;
+	while (*string != ',' && *string != '\0')
+	{
+		r *= 10;
+		r += (int)(*string - 48);
+		string++;
+	}
+	string++;
+	while(*string != ',' && *string != '\0')
+	{
+		g *= 10;
+		g += (int)(*string - 48);
+		string++;
+	}
+	string++;
+	while (*string != '\0')
+	{
+		b *= 10;
+		b += (int)(*string - 48);
+		string++;
+	}
+	return (r * 256 * 256 + g * 256 + b);
+}
+
 void		define(char c, t_pos *pos, int a, int b)
 {
 	if (c == 'N')
 	{
 		pos->dirX = 0;
 		pos->dirY = -1;
+		pos->planeX = 0.66;
+		pos->planeY = 0;
 	}
 	if (c == 'E')
 	{
 		pos->dirX = 1;
 		pos->dirY = 0;
+		pos->planeX = 0;
+		pos->planeY = 0.66;
 	}
 	if (c == 'S')
 	{
 		pos->dirX = 0;
 		pos->dirY = 1;
+		pos->planeX = -0.66;
+		pos->planeY = 0;
 	}
 	if (c == 'W')
 	{
 		pos->dirX = -1;
 		pos->dirY = 0;
+		pos->planeX = 0;
+		pos->planeY = -0.66;
 	}
-	pos->posX = (double)a - 0.5;
-	pos->posY = (double)b - 0.5;
+	pos->posX = (double)a;
+	pos->posY = (double)b;
 }
 
 int			count(char *cub)
@@ -96,19 +139,14 @@ char		**map(char **cub, int i, t_ptr *ptr, t_pos *pos)
 	return (map);
 }
 
-int			sizey(char **cub, int i)
+int			sizey(char **cub, int i, int j)
 {
 	int		n;
-	int		j;
 
 	n = 0;
-	j = 0;
-	while (cub[i][j] >= '0' && cub[i][j] <= '9')
-		j++;
-	while (cub[i][j] != ' ')
-		j++;
-	j++;
 	while (cub[i][j] < '0' || cub[i][j] > '9')
+		j++;
+	while (cub[i][j] >= '0' && cub[i][j] <= '9')
 	{
 		n *= 10;
 		n += cub[i][j] - 48;
@@ -117,21 +155,22 @@ int			sizey(char **cub, int i)
 	return (n);
 }
 
-int			sizex(char **cub, int i)
+int			sizex(t_pos *pos, char **cub, int i)
 {
 	int		n;
 	int		j;
 
 	n = 0;
 	j = 0;
-	while (cub[i][j] >= '0' && cub[i][j] <= '9')
-		j++;
 	while (cub[i][j] < '0' || cub[i][j] > '9')
+		j++;
+	while (cub[i][j] >= '0' && cub[i][j] <= '9')
 	{
 		n *= 10;
 		n += cub[i][j] - 48;
 		j++;
 	}
+	pos->size_y = sizey(cub, i, j);
 	return (n);
 }
 
@@ -144,12 +183,11 @@ void		check(char **cub, t_ptr *ptr, t_pos *pos)
 	while (pos->map == 0)
 	{
 		if (cub[i][0] == 'R')
-		{
-			//pos->size_x = sizex(cub, i);
-			//pos->size_y = sizey(cub, i);
-		}
-		/*else if (cub[i][0] == 'F')
-		else if (cub[i][0] == 'C')*/
+			pos->size_x = sizex(pos, cub, i);
+		else if (cub[i][0] == 'F')
+			pos->colorF = colorForC(cub[i]);
+		else if (cub[i][0] == 'C')
+			pos->colorC = colorForC(cub[i]);
 		else if (cub[i][0] == '1')
 		{
 			pos->map = map(cub, i, ptr, pos);
