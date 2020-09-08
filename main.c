@@ -14,6 +14,26 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+void	init_tex(t_pos *pos)
+{
+	if (!(pos->txt = malloc(sizeof(t_txt))))
+		return (ft_free_all(pos));
+	if (!(pos->txt->txt = (void**)malloc(sizeof(void*) * 4)))
+		return (ft_free_all(pos));
+	if (!(pos->txt->txt[0] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
+		&pos->txt->width[0], &pos->txt->height[0])))
+		return (ft_free_all(pos));
+	if (!(pos->txt->txt[1] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkS,
+		&pos->txt->width[1], &pos->txt->height[1])))
+		return (ft_free_all(pos));
+	if (!(pos->txt->txt[2] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkE,
+		&pos->txt->width[2], &pos->txt->height[2])))
+		return (ft_free_all(pos));
+	if (!(pos->txt->txt[3] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
+		&pos->txt->width[3], &pos->txt->height[3])))
+		return (ft_free_all(pos));
+}
+
 int		get_colors(t_pos *pos)
 {
 	if (pos->side == 0 && pos->rayDirX < 0)
@@ -130,6 +150,15 @@ int		algo(t_pos *pos)
 		pos->drawEnd = pos->lineHeight / 2 + pos->size_y / 2;
 		if (pos->drawEnd >= pos->size_y)
 			pos->drawEnd = pos->size_y - 1;
+		if (pos->side == 0)
+			pos->wallX = pos->posY + pos->perpWallDist * pos->rayDirY;
+		else
+			pos->wallX = pos->posX + pos->perpWallDist * pos->rayDirX;
+		pos->texX = pos->wallX * pos->txt->width[0];
+		if(pos->side == 0 && pos->rayDirX > 0)
+			pos->texX = pos->txt->width[0] - pos->texX - 1;
+		if(pos->side == 1 && pos->rayDirY < 0)
+			pos->texX = pos->txt->width[0] - pos->texX - 1;
 		printline(x, pos);
 	}
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
@@ -183,7 +212,7 @@ int		initkey(int key, t_pos *pos)
 	return (0);
 }
 
-int		init(t_ptr *ptr, t_pos *pos)
+int		init(t_pos *pos)
 {
 	int i;
 	int j;
@@ -194,6 +223,7 @@ int		init(t_ptr *ptr, t_pos *pos)
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
+	init_tex(pos);
 	algo(pos);
 	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
 		return (-1);
@@ -203,15 +233,15 @@ int		init(t_ptr *ptr, t_pos *pos)
 
 int		main(int argc, char **argv)
 {
-	t_ptr	map;
 	t_pos	pos;
 
 	if (argc < 2)
 		return (0);
-	parser(argv, &map, &pos);
+	if (parser(argv, &pos) == -1)
+		return (0);
 	//pos.size_x = 1080;
 	//pos.size_y = 768;
-	if (init(&map, &pos) == -1)
+	if (init(&pos) == -1)
 		return (0);
 	return (0);
 }

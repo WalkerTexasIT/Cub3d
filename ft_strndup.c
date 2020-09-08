@@ -55,3 +55,19 @@ char		*ft_strndup(const char *s, size_t n)
 	dest[n] = 0;
 	return (&*dest);
 }
+
+char		*ft_strnum(char *string, int n)
+{
+	char	*dest;
+	int		len;
+	int		i;
+
+	len = ft_strlen(string);
+	if (!(dest = (char*)malloc(sizeof(char) * (len - n + 1))))
+		return (0);
+	i = 0;
+	while (string[n] != '\0')
+		dest[i++] = string[n++];
+	dest[i] = '\0';
+	return (dest);
+}

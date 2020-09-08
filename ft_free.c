@@ -20,7 +20,17 @@ void	ft_free_map(t_pos *pos)
 	if (pos->map)
 	{
 		while (pos->map[i] != 0)
-			free(pos->map[i++]);
+		{
+			if (pos->map[i])
+				free(pos->map[i++]);
+		}
 		free(pos->map);
 	}
+}
+
+void	ft_free_all(t_pos *pos)
+{
+	ft_free_map(pos);
+	mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
+	exit(0);
 }

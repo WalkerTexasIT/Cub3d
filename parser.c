@@ -12,6 +12,49 @@
 
 #include "cub3d.h"
 
+void	set_path(t_pos *pos, char *line)
+{
+	if (!pos->linkN && line[0] == 'N')
+		if(!(pos->linkN = ft_strnum(line, 3)))
+			return (ft_free_all(pos));
+	if (!pos->linkS && line[0] == 'S')
+		if(!(pos->linkS = ft_strnum(line, 3)))
+			return (ft_free_all(pos));
+	if (!pos->linkE && line[0] == 'E')
+		if(!(pos->linkE = ft_strnum(line, 3)))
+			return (ft_free_all(pos));
+	if (!pos->linkW && line[0] == 'W')
+		if(!(pos->linkW = ft_strnum(line, 3)))
+			return (ft_free_all(pos));
+}
+
+int		verifmap(t_pos *pos)
+{
+	int i;
+	int n;
+
+	i = 0;
+	while (pos->map[i] != NULL)
+	{
+		n = 0;
+		while(pos->map[i][n] != '\0')
+		{
+			if (pos->map[i][n] == '0')
+			{
+				if (pos->map[i][n - 1] != '0' && pos->map[i][n - 1] != '1')
+					return (0);
+				if (pos->map[i - 1][n] != '0' && pos->map[i - 1][n] != '1')
+					return (0);
+				if (pos->map[i][n + 1] != '0' && pos->map[i][n + 1] != '1')
+					return (0);
+			}
+			n++;
+		}
+		i++;
+	}
+	return (1);
+}
+
 int		colorForC(char *string)
 {
 	int color;
@@ -106,7 +149,7 @@ int			countline(char **cub, int i)
 	return (n + 1);
 }
 
-char		**map(char **cub, int i, t_ptr *ptr, t_pos *pos)
+char		**map(char **cub, int i, t_pos *pos)
 {
 	int		j;
 	char	**map;
@@ -174,7 +217,7 @@ int			sizex(t_pos *pos, char **cub, int i)
 	return (n);
 }
 
-void		check(char **cub, t_ptr *ptr, t_pos *pos)
+void		check(char **cub, t_pos *pos)
 {
 	int		i;
 
@@ -184,13 +227,21 @@ void		check(char **cub, t_ptr *ptr, t_pos *pos)
 	{
 		if (cub[i][0] == 'R')
 			pos->size_x = sizex(pos, cub, i);
+		else if (cub[i][0] == 'N' && cub[i][1] == 'O')
+			set_path(pos, cub[i]);
+		else if (cub[i][0] == 'S' && cub[i][1] == 'O')
+			set_path(pos, cub[i]);
+		else if (cub[i][0] == 'W' && cub[i][1] == 'E')
+			set_path(pos, cub[i]);
+		else if (cub[i][0] == 'E' && cub[i][1] == 'A')
+			set_path(pos, cub[i]);
 		else if (cub[i][0] == 'F')
 			pos->colorF = colorForC(cub[i]);
 		else if (cub[i][0] == 'C')
 			pos->colorC = colorForC(cub[i]);
 		else if (cub[i][0] == '1')
 		{
-			pos->map = map(cub, i, ptr, pos);
+			pos->map = map(cub, i, pos);
 		}
 		i++;
 	}
@@ -208,12 +259,17 @@ char		**get_line(int fd)
 	return (map);
 }
 
-void		parser(char **argv, t_ptr *ptr, t_pos *pos)
+int		parser(char **argv, t_pos *pos)
 {
 	int		fd;
 	char	**map;
 
 	fd = open(argv[1], O_RDONLY);
 	map = get_line(fd);
-	check(map, ptr, pos);
+	check(map, pos);
+	if (verifmap(pos) == 0)
+	{
+		printf("false\n");
+		return (-1);
+	}
 }

@@ -21,12 +21,11 @@
 # define MoveSpeed 0.1
 # define Rotate 0.05
 
-typedef struct	s_ptr {
-	int			x;
-	int			y;
-	int			size_x;
-	int			size_y;
-}				t_ptr;
+typedef struct	s_txt {
+	void	**txt;
+	int		height[4];
+	int		width[4];
+}				t_txt;
 
 typedef struct	s_pos {
 	int		size_x;
@@ -60,17 +59,25 @@ typedef struct	s_pos {
 	int		drawEnd;
 	int		colorC;
 	int		colorF;
+	t_txt	*txt;
+	char	*linkN;
+	char	*linkS;
+	char	*linkE;
+	char	*linkW;
+	double	wallX;
+	int		texX;
 }				t_pos;
 
 int				ft_strlen(const char *src);
 char			*ft_strjoin(char const *cache, char const *buff);
 char			*ft_strndup(const char *s, size_t n);
 void			ft_bzero(void *src, size_t n);
-void			parser(char **argv, t_ptr *ptr, t_pos *pos);
+int				parser(char **argv, t_pos *pos);
 char			*ft_substr(char const *s, unsigned int start, size_t len);
 char			**ft_split(char const *s, char c);
 void			ft_free_map(t_pos *pos);
 int				ft_atoi(const char *str);
 void			rot(t_pos *pos, char RorL);
+char			*ft_strnum(char *string, int n);
 
 #endif
