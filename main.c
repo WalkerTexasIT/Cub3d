@@ -125,7 +125,7 @@ int		algo(t_pos *pos)
 		}
 		while (i < pos->drawEnd)
 		{
-			pos->texY = pos->texPos & (pos->txt->height);
+			pos->texY = (int)pos->texPos & (pos->txt->height[0]);
 			if (pos->side == 0 && pos->rayDirX < 0)
 				color = (int)pos->txt->txt[3][pos->txt->height[3] * pos->texY+ pos->texX];
 			else if (pos->side == 0 && pos->rayDirX > 0)

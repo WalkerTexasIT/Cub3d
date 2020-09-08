@@ -34,11 +34,15 @@ int		verifmap(t_pos *pos)
 	int n;
 
 	i = 0;
-	while (pos->map[i] != NULL)
+	printf("%c\n", pos->map[7][0]);
+	while (pos->map[i][0] != '\0' && pos->map[i][0] != '\n')
 	{
+		printf("\ntest %d\n", i);
 		n = 0;
-		while(pos->map[i][n] != '\0')
+		while(pos->map[i][n])
 		{
+			printf("kgb %c\n", pos->map[i][n]);
+			printf("test %d %d | ", i, n);
 			if (pos->map[i][n] == '0')
 			{
 				if (pos->map[i][n - 1] != '0' && pos->map[i][n - 1] != '1')
@@ -157,13 +161,13 @@ char		**map(char **cub, int i, t_pos *pos)
 	int		b;
 
 	a = 0;
-	if (!(map = (char**)malloc(sizeof(char*) * countline(cub, i))))
+	if (!(map = (char**)malloc(sizeof(char*) * (countline(cub, i) + 1))))
 		return (0);
 	while (cub[i] != 0)
 	{
 		j = 0;
 		b = 0;
-		if (!(map[a] = (char*)malloc(sizeof(char) * count(cub[i]))))
+		if (!(map[a] = (char*)malloc(sizeof(char) * (count(cub[i]) + 1))))
 			return (0);
 		while (cub[i][j] != '\0')
 		{
@@ -176,9 +180,11 @@ char		**map(char **cub, int i, t_pos *pos)
 			}
 			j++;
 		}
+		map[a][b] = '\0';
 		a++;
 		i++;
 	}
+	map[a] = NULL;
 	return (map);
 }
 
@@ -269,7 +275,9 @@ int		parser(char **argv, t_pos *pos)
 	check(map, pos);
 	if (verifmap(pos) == 0)
 	{
+		printf("test\n");
 		printf("false\n");
 		return (-1);
 	}
+	return (0);
 }
