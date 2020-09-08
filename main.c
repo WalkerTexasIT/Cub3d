@@ -18,70 +18,20 @@ void	init_tex(t_pos *pos)
 {
 	if (!(pos->txt = malloc(sizeof(t_txt))))
 		return (ft_free_all(pos));
-	if (!(pos->txt->txt = (void**)malloc(sizeof(void*) * 4)))
+	if (!(pos->txt->txt = (int**)malloc(sizeof(void*) * 4)))
 		return (ft_free_all(pos));
-	if (!(pos->txt->txt[0] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
+	if (!(pos->txt->txt[0] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
 		&pos->txt->width[0], &pos->txt->height[0])))
 		return (ft_free_all(pos));
-	if (!(pos->txt->txt[1] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkS,
+	if (!(pos->txt->txt[1] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkS,
 		&pos->txt->width[1], &pos->txt->height[1])))
 		return (ft_free_all(pos));
-	if (!(pos->txt->txt[2] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkE,
+	if (!(pos->txt->txt[2] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkE,
 		&pos->txt->width[2], &pos->txt->height[2])))
 		return (ft_free_all(pos));
-	if (!(pos->txt->txt[3] = mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
+	if (!(pos->txt->txt[3] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
 		&pos->txt->width[3], &pos->txt->height[3])))
 		return (ft_free_all(pos));
-}
-
-int		get_colors(t_pos *pos)
-{
-	if (pos->side == 0 && pos->rayDirX < 0)
-		return (0xd3d3d3); // light grey W
-	else if (pos->side == 0 && pos->rayDirX > 0)
-		return (0x6a5acd); // slate blue E
-	else if (pos->side == 1 && pos->rayDirY < 0)
-		return (0xffff); // cyan N
-	else if (pos->side == 1 && pos->rayDirY > 0)
-		return (0xffc0cb); // pink S 
-	else
-		return (0);
-	return (0);
-}
-
-int		printline(int x, t_pos *pos)
-{
-	int i;
-	int n;
-	int color;
-
-	i = 0;
-	n = x;
-	color = get_colors(pos);
-	if (x == 0)
-	{
-		printf("%d, %d\n", pos->stepX, pos->stepY);
-	}
-	while (i < pos->drawStart)
-	{
-		pos->img_data[n] = pos->colorC;
-		n += pos->size_x;
-		i++;
-	}
-	while (pos->drawStart <= pos->drawEnd)
-	{
-		pos->img_data[n] = color;
-		n += pos->size_x;
-		pos->drawStart++;
-		i++;
-	}
-	while (i < pos->size_y)
-	{
-		pos->img_data[n] = pos->colorF;
-		n += pos->size_x;
-		i++;
-	}
-	return (0);
 }
 
 int		algo(t_pos *pos)
@@ -89,6 +39,10 @@ int		algo(t_pos *pos)
 	int		x;
 	double	cameraX;
 	int		hit;
+	int		y;
+	int		color;
+	int		n;
+	int		i;
 
 	printf("Dir(%f, %f) Pos(%f, %f) Plane(%f, %f)\n", pos->dirX, pos->dirY, pos->posX, pos->posY, pos->planeX, pos->planeY);
 	x = -1;
@@ -159,7 +113,37 @@ int		algo(t_pos *pos)
 			pos->texX = pos->txt->width[0] - pos->texX - 1;
 		if(pos->side == 1 && pos->rayDirY < 0)
 			pos->texX = pos->txt->width[0] - pos->texX - 1;
-		printline(x, pos);
+		pos->step = 1 * pos->txt->height[0] / pos->lineHeight;
+		pos->texPos = (pos->drawStart - pos->size_y / 2 + pos->lineHeight / 2) * pos->step;
+		i = 0;
+		n = x;
+		while (i < pos->drawStart)
+		{
+			pos->img_data[n] = pos->colorC;
+			n += pos->size_x;
+			i++;
+		}
+		while (i < pos->drawEnd)
+		{
+			pos->texY = pos->texPos & (pos->txt->height);
+			if (pos->side == 0 && pos->rayDirX < 0)
+				color = (int)pos->txt->txt[3][pos->txt->height[3] * pos->texY+ pos->texX];
+			else if (pos->side == 0 && pos->rayDirX > 0)
+				color = (int)pos->txt->txt[2][pos->txt->height[2] * pos->texY+ pos->texX];
+			else if (pos->side == 1 && pos->rayDirY < 0)
+				color = (int)pos->txt->txt[0][pos->txt->height[0] * pos->texY+ pos->texX];
+			else if (pos->side == 1 && pos->rayDirY > 0)
+				color = (int)pos->txt->txt[1][pos->txt->height[1] * pos->texY+ pos->texX];
+			pos->img_data[n] = color;
+			n += pos->size_x;
+			i++;
+		}
+		while (i < pos->size_y)
+		{
+			pos->img_data[n] = pos->colorF;
+			n += pos->size_x;
+			i++;
+		}
 	}
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
 	//printf("%f, %f, %f, %f\n", pos->dirX, pos->dirY, pos->planeX, pos->planeY);

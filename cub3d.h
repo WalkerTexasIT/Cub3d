@@ -22,7 +22,7 @@
 # define Rotate 0.05
 
 typedef struct	s_txt {
-	void	**txt;
+	int		**txt;
 	int		height[4];
 	int		width[4];
 }				t_txt;
@@ -66,6 +66,9 @@ typedef struct	s_pos {
 	char	*linkW;
 	double	wallX;
 	int		texX;
+	int		texY;
+	double	step;
+	double	texPos;
 }				t_pos;
 
 int				ft_strlen(const char *src);
@@ -79,5 +82,6 @@ void			ft_free_map(t_pos *pos);
 int				ft_atoi(const char *str);
 void			rot(t_pos *pos, char RorL);
 char			*ft_strnum(char *string, int n);
+void			ft_free_all(t_pos *pos);
 
 #endif
