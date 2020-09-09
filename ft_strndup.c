@@ -66,8 +66,9 @@ char		*ft_strnum(char *string, int n)
 	if (!(dest = (char*)malloc(sizeof(char) * (len - n + 1))))
 		return (0);
 	i = 0;
-	while (string[n] != '\0')
+	while (string[n] != '\0' && string[n] != '\n')
 		dest[i++] = string[n++];
 	dest[i] = '\0';
+	printf("%s", dest);
 	return (dest);
 }

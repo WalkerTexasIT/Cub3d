@@ -16,22 +16,23 @@
 
 void	init_tex(t_pos *pos)
 {
+	printf("%s\n%s\n%s\n%s\n", pos->linkN, pos->linkS, pos->linkE, pos->linkW);
 	if (!(pos->txt = malloc(sizeof(t_txt))))
-		return (ft_free_all(pos));
+		return (ft_free_all(pos, "malloc t_txt"));
 	if (!(pos->txt->txt = (int**)malloc(sizeof(void*) * 4)))
-		return (ft_free_all(pos));
+		return (ft_free_all(pos, "malloc int**"));
 	if (!(pos->txt->txt[0] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
 		&pos->txt->width[0], &pos->txt->height[0])))
-		return (ft_free_all(pos));
+		return (ft_free_all(pos, "xpm to ... N"));
 	if (!(pos->txt->txt[1] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkS,
 		&pos->txt->width[1], &pos->txt->height[1])))
-		return (ft_free_all(pos));
+		return (ft_free_all(pos, "xpm to ... S"));
 	if (!(pos->txt->txt[2] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkE,
 		&pos->txt->width[2], &pos->txt->height[2])))
-		return (ft_free_all(pos));
+		return (ft_free_all(pos, "xpm to ... E"));
 	if (!(pos->txt->txt[3] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
 		&pos->txt->width[3], &pos->txt->height[3])))
-		return (ft_free_all(pos));
+		return (ft_free_all(pos, "xpm to ... W"));
 }
 
 int		algo(t_pos *pos)
@@ -113,7 +114,7 @@ int		algo(t_pos *pos)
 			pos->texX = pos->txt->width[0] - pos->texX - 1;
 		if(pos->side == 1 && pos->rayDirY < 0)
 			pos->texX = pos->txt->width[0] - pos->texX - 1;
-		pos->step = 1 * pos->txt->height[0] / pos->lineHeight;
+		pos->step = 1.0 * (double)pos->txt->height[0] / (double)pos->lineHeight;
 		pos->texPos = (pos->drawStart - pos->size_y / 2 + pos->lineHeight / 2) * pos->step;
 		i = 0;
 		n = x;

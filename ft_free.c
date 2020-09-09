@@ -28,8 +28,9 @@ void	ft_free_map(t_pos *pos)
 	}
 }
 
-void	ft_free_all(t_pos *pos)
+void	ft_free_all(t_pos *pos, char *ret)
 {
+	printf("%s\n", ret);
 	ft_free_map(pos);
 	mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 	exit(0);

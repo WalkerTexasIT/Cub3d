@@ -14,18 +14,18 @@
 
 void	set_path(t_pos *pos, char *line)
 {
-	if (!pos->linkN && line[0] == 'N')
+	if (line[0] == 'N' && line[1] == 'O')
 		if(!(pos->linkN = ft_strnum(line, 3)))
-			return (ft_free_all(pos));
-	if (!pos->linkS && line[0] == 'S')
+			return (ft_free_all(pos, "strnum N"));
+	if (line[0] == 'S' && line[1] == 'O')
 		if(!(pos->linkS = ft_strnum(line, 3)))
-			return (ft_free_all(pos));
-	if (!pos->linkE && line[0] == 'E')
+			return (ft_free_all(pos, "strnum S"));
+	if (line[0] == 'E' && line[1] == 'A')
 		if(!(pos->linkE = ft_strnum(line, 3)))
-			return (ft_free_all(pos));
-	if (!pos->linkW && line[0] == 'W')
+			return (ft_free_all(pos, "strnum E"));
+	if (line[0] == 'W' && line[1] == 'E')
 		if(!(pos->linkW = ft_strnum(line, 3)))
-			return (ft_free_all(pos));
+			return (ft_free_all(pos, "strnum W"));
 }
 
 int		verifmap(t_pos *pos)
@@ -34,15 +34,11 @@ int		verifmap(t_pos *pos)
 	int n;
 
 	i = 0;
-	printf("%c\n", pos->map[7][0]);
-	while (pos->map[i][0] != '\0' && pos->map[i][0] != '\n')
+	while (pos->map[i] != NULL)
 	{
-		printf("\ntest %d\n", i);
 		n = 0;
 		while(pos->map[i][n])
 		{
-			printf("kgb %c\n", pos->map[i][n]);
-			printf("test %d %d | ", i, n);
 			if (pos->map[i][n] == '0')
 			{
 				if (pos->map[i][n - 1] != '0' && pos->map[i][n - 1] != '1')

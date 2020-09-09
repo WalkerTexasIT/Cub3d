@@ -82,6 +82,6 @@ void			ft_free_map(t_pos *pos);
 int				ft_atoi(const char *str);
 void			rot(t_pos *pos, char RorL);
 char			*ft_strnum(char *string, int n);
-void			ft_free_all(t_pos *pos);
+void			ft_free_all(t_pos *pos, char *ret);
 
 #endif
