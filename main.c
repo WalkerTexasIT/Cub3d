@@ -16,7 +16,6 @@
 
 void	init_tex(t_pos *pos)
 {
-	printf("%s\n%s\n%s\n%s\n", pos->linkN, pos->linkS, pos->linkE, pos->linkW);
 	if (!(pos->txt = malloc(sizeof(t_txt))))
 		return (ft_free_all(pos, "malloc t_txt"));
 	if (!(pos->txt->txt = (int**)malloc(sizeof(void*) * 4)))
@@ -45,7 +44,7 @@ int		algo(t_pos *pos)
 	int		n;
 	int		i;
 
-	printf("Dir(%f, %f) Pos(%f, %f) Plane(%f, %f)\n", pos->dirX, pos->dirY, pos->posX, pos->posY, pos->planeX, pos->planeY);
+	//printf("Dir(%f, %f) Pos(%f, %f) Plane(%f, %f)\n", pos->dirX, pos->dirY, pos->posX, pos->posY, pos->planeX, pos->planeY);
 	x = -1;
 	while (++x < pos->size_x)
 	{
@@ -126,15 +125,18 @@ int		algo(t_pos *pos)
 		}
 		while (i < pos->drawEnd)
 		{
-			pos->texY = (int)pos->texPos & (pos->txt->height[0]);
+			pos->texY = (int)pos->texPos & (pos->txt->height[0] - 1);
+			pos->texPos += pos->step;
 			if (pos->side == 0 && pos->rayDirX < 0)
-				color = (int)pos->txt->txt[3][pos->txt->height[3] * pos->texY+ pos->texX];
+				color = (int)pos->txt->txt[3][pos->txt->height[3] * pos->texY + pos->texX];
 			else if (pos->side == 0 && pos->rayDirX > 0)
-				color = (int)pos->txt->txt[2][pos->txt->height[2] * pos->texY+ pos->texX];
+				color = (int)pos->txt->txt[2][pos->txt->height[2] * pos->texY + pos->texX];
 			else if (pos->side == 1 && pos->rayDirY < 0)
-				color = (int)pos->txt->txt[0][pos->txt->height[0] * pos->texY+ pos->texX];
+				color = (int)pos->txt->txt[0][pos->txt->height[0] * pos->texY + pos->texX];
 			else if (pos->side == 1 && pos->rayDirY > 0)
-				color = (int)pos->txt->txt[1][pos->txt->height[1] * pos->texY+ pos->texX];
+				color = (int)pos->txt->txt[1][pos->txt->height[1] * pos->texY + pos->texX];
+			if (x == 0)
+				printf("texY : %d | texX : %d | step : %f | texPos : %f\n", pos->texY, pos->texX, pos->step, pos->texPos);
 			pos->img_data[n] = color;
 			n += pos->size_x;
 			i++;
