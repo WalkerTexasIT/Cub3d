@@ -22,9 +22,14 @@
 # define Rotate 0.05
 
 typedef struct	s_txt {
+	void	**voidtxt;
+	char	**chartxt;
 	int		**txt;
 	int		height[4];
 	int		width[4];
+	int		bits[4];
+	int		sl[4];
+	int		end[4];
 }				t_txt;
 
 typedef struct	s_pos {

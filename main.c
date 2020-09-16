@@ -14,24 +14,49 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+t_txt	*make_data_adress(t_txt *txt)
+{
+	int i;
+
+	i = 0;
+	if (!(txt->chartxt = (char**)malloc(sizeof(char*) * 4)))
+		return (NULL);
+	while (i < 4)
+	{
+		txt->chartxt[i] = mlx_get_data_addr(txt->voidtxt[i], &txt->bits[i], &txt->sl[i], &txt->end[i]);
+		i++;
+	}
+	i = 0;
+	if (!(txt->txt = (int**)malloc(sizeof(int*) * 4)))
+		return (NULL);
+	while (i < 4)
+	{
+		txt->txt[i] = (int*)txt->chartxt[i];
+		i++;
+	}
+	return (txt);
+}
+
 void	init_tex(t_pos *pos)
 {
 	if (!(pos->txt = malloc(sizeof(t_txt))))
 		return (ft_free_all(pos, "malloc t_txt"));
-	if (!(pos->txt->txt = (int**)malloc(sizeof(void*) * 4)))
+	if (!(pos->txt->voidtxt = (void**)malloc(sizeof(void*) * 4)))
 		return (ft_free_all(pos, "malloc int**"));
-	if (!(pos->txt->txt[0] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
+	if (!(pos->txt->voidtxt[0] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
 		&pos->txt->width[0], &pos->txt->height[0])))
 		return (ft_free_all(pos, "xpm to ... N"));
-	if (!(pos->txt->txt[1] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkS,
+	if (!(pos->txt->voidtxt[1] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkS,
 		&pos->txt->width[1], &pos->txt->height[1])))
 		return (ft_free_all(pos, "xpm to ... S"));
-	if (!(pos->txt->txt[2] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkE,
+	if (!(pos->txt->voidtxt[2] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkE,
 		&pos->txt->width[2], &pos->txt->height[2])))
 		return (ft_free_all(pos, "xpm to ... E"));
-	if (!(pos->txt->txt[3] = (int*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
+	if (!(pos->txt->voidtxt[3] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
 		&pos->txt->width[3], &pos->txt->height[3])))
 		return (ft_free_all(pos, "xpm to ... W"));
+	if (make_data_adress(pos->txt) == NULL)
+		return (ft_free_all(pos, "malloc in data adress"));
 }
 
 int		algo(t_pos *pos)
