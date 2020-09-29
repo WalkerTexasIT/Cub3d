@@ -14,6 +14,16 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+int		texturing(t_pos *pos, int texnum)
+{
+	int		color;
+
+	pos->texY = (int)pos->texPos & (pos->txt->height[texnum] - 1);
+	pos->texPos += pos->step;
+	color = (int)pos->txt->txt[texnum][pos->txt->height[texnum] * pos->texY + pos->texX];
+	return (color);
+}
+
 t_txt	*make_data_adress(t_txt *txt)
 {
 	int i;
@@ -42,7 +52,7 @@ void	init_tex(t_pos *pos)
 	if (!(pos->txt = malloc(sizeof(t_txt))))
 		return (ft_free_all(pos, "malloc t_txt"));
 	if (!(pos->txt->voidtxt = (void**)malloc(sizeof(void*) * 4)))
-		return (ft_free_all(pos, "malloc int**"));
+		return (ft_free_all(pos, "malloc void**"));
 	if (!(pos->txt->voidtxt[0] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
 		&pos->txt->width[0], &pos->txt->height[0])))
 		return (ft_free_all(pos, "xpm to ... N"));
@@ -133,7 +143,8 @@ int		algo(t_pos *pos)
 			pos->wallX = pos->posY + pos->perpWallDist * pos->rayDirY;
 		else
 			pos->wallX = pos->posX + pos->perpWallDist * pos->rayDirX;
-		pos->texX = pos->wallX * pos->txt->width[0];
+		pos->wallX -= floor((pos->wallX));
+		pos->texX = (int)(pos->wallX * pos->txt->width[0]);
 		if(pos->side == 0 && pos->rayDirX > 0)
 			pos->texX = pos->txt->width[0] - pos->texX - 1;
 		if(pos->side == 1 && pos->rayDirY < 0)
@@ -150,19 +161,14 @@ int		algo(t_pos *pos)
 		}
 		while (i < pos->drawEnd)
 		{
-			pos->texY = (int)pos->texPos & (pos->txt->height[0] - 1);
-			pos->texPos += pos->step;
 			if (pos->side == 0 && pos->rayDirX < 0)
-				color = (int)pos->txt->txt[3][pos->txt->height[3] * pos->texY + pos->texX];
+				pos->img_data[n] = texturing(pos, 3);
 			else if (pos->side == 0 && pos->rayDirX > 0)
-				color = (int)pos->txt->txt[2][pos->txt->height[2] * pos->texY + pos->texX];
+				pos->img_data[n] = texturing(pos, 2);
 			else if (pos->side == 1 && pos->rayDirY < 0)
-				color = (int)pos->txt->txt[0][pos->txt->height[0] * pos->texY + pos->texX];
+				pos->img_data[n] = texturing(pos, 0);
 			else if (pos->side == 1 && pos->rayDirY > 0)
-				color = (int)pos->txt->txt[1][pos->txt->height[1] * pos->texY + pos->texX];
-			if (x == 0)
-				printf("texY : %d | texX : %d | step : %f | texPos : %f\n", pos->texY, pos->texX, pos->step, pos->texPos);
-			pos->img_data[n] = color;
+				pos->img_data[n] = texturing(pos, 1);
 			n += pos->size_x;
 			i++;
 		}
@@ -174,7 +180,6 @@ int		algo(t_pos *pos)
 		}
 	}
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
-	//printf("%f, %f, %f, %f\n", pos->dirX, pos->dirY, pos->planeX, pos->planeY);
 	return (0);
 }
 

@@ -28,9 +28,21 @@ void	ft_free_map(t_pos *pos)
 	}
 }
 
+void	free_all_txt(t_txt *txt)
+{
+	int i;
+
+	i = 0;
+	if (txt->voidtxt)
+		free(txt->voidtxt);
+	if (txt->chartxt)
+		free(txt->chartxt);
+}
+
 void	ft_free_all(t_pos *pos, char *ret)
 {
 	printf("%s\n", ret);
+	free_all_txt(pos);
 	ft_free_map(pos);
 	mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 	exit(0);
