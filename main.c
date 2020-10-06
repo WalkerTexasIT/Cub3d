@@ -14,6 +14,40 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+int		countsprite(t_pos *pos)
+{
+	int n;
+	int a;
+	int b;
+
+	n = 0;
+	a = 0;
+	while (pos->map[a] != NULL)
+	{
+		b = 0;
+		while (pos->map[a][b] != '\0')
+		{
+			if (pos->map[a][b] == '2')
+				n++;
+			b++;
+		}
+		a++;
+	}
+	return (n);
+}
+
+void	init_sprite(t_pos *pos)
+{
+	int i;
+	int	spriteOrder[pos->numSprite]
+
+	i = 0;
+	while (i < pos->numSprite)
+	{
+		spriteOrder[i] = i;
+	}
+}
+
 int		texturing(t_pos *pos, int texnum)
 {
 	int		color;
@@ -29,17 +63,17 @@ t_txt	*make_data_adress(t_txt *txt)
 	int i;
 
 	i = 0;
-	if (!(txt->chartxt = (char**)malloc(sizeof(char*) * 4)))
+	if (!(txt->chartxt = (char**)malloc(sizeof(char*) * 5)))
 		return (NULL);
-	while (i < 4)
+	while (i < 5)
 	{
 		txt->chartxt[i] = mlx_get_data_addr(txt->voidtxt[i], &txt->bits[i], &txt->sl[i], &txt->end[i]);
 		i++;
 	}
 	i = 0;
-	if (!(txt->txt = (int**)malloc(sizeof(int*) * 4)))
+	if (!(txt->txt = (int**)malloc(sizeof(int*) * 5)))
 		return (NULL);
-	while (i < 4)
+	while (i < 5)
 	{
 		txt->txt[i] = (int*)txt->chartxt[i];
 		i++;
@@ -64,6 +98,9 @@ void	init_tex(t_pos *pos)
 		return (ft_free_all(pos, "xpm to ... E"));
 	if (!(pos->txt->voidtxt[3] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
 		&pos->txt->width[3], &pos->txt->height[3])))
+		return (ft_free_all(pos, "xpm to ... W"));
+	if (!(pos->txt->voidtxt[4] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkSprite,
+		&pos->txt->width[4], &pos->txt->height[4])))
 		return (ft_free_all(pos, "xpm to ... W"));
 	if (make_data_adress(pos->txt) == NULL)
 		return (ft_free_all(pos, "malloc in data adress"));
@@ -139,6 +176,7 @@ int		algo(t_pos *pos)
 		pos->drawEnd = pos->lineHeight / 2 + pos->size_y / 2;
 		if (pos->drawEnd >= pos->size_y)
 			pos->drawEnd = pos->size_y - 1;
+		// wall
 		if (pos->side == 0)
 			pos->wallX = pos->posY + pos->perpWallDist * pos->rayDirY;
 		else
@@ -153,13 +191,13 @@ int		algo(t_pos *pos)
 		pos->texPos = (pos->drawStart - pos->size_y / 2 + pos->lineHeight / 2) * pos->step;
 		i = 0;
 		n = x;
-		while (i < pos->drawStart)
+		while (i < pos->drawStart) // sol
 		{
 			pos->img_data[n] = pos->colorC;
 			n += pos->size_x;
 			i++;
 		}
-		while (i < pos->drawEnd)
+		while (i < pos->drawEnd) // wall
 		{
 			if (pos->side == 0 && pos->rayDirX < 0)
 				pos->img_data[n] = texturing(pos, 3);
@@ -172,12 +210,15 @@ int		algo(t_pos *pos)
 			n += pos->size_x;
 			i++;
 		}
-		while (i < pos->size_y)
+		while (i < pos->size_y) // plafond
 		{
 			pos->img_data[n] = pos->colorF;
 			n += pos->size_x;
 			i++;
 		}
+		// sprite
+		pos->numSprite = count_sprite(pos);
+		init_sprite(pos);
 	}
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
 	return (0);

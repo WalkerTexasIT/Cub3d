@@ -69,11 +69,14 @@ typedef struct	s_pos {
 	char	*linkS;
 	char	*linkE;
 	char	*linkW;
+	char	*linksprite;
 	double	wallX;
 	int		texX;
 	int		texY;
 	double	step;
 	double	texPos;
+	double	spriteDistance;
+	int		numSprite;
 }				t_pos;
 
 int				ft_strlen(const char *src);

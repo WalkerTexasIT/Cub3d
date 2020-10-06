@@ -26,6 +26,9 @@ void	set_path(t_pos *pos, char *line)
 	if (line[0] == 'W' && line[1] == 'E')
 		if(!(pos->linkW = ft_strnum(line, 3)))
 			return (ft_free_all(pos, "strnum W"));
+	if (line[0] == 'S' && line[1] == ' ')
+		if(!(pos->linksprite = ft_strnum(line, 2)))
+			return (ft_free_all(pos, "strnum Sprite"));
 }
 
 int		verifmap(t_pos *pos)
@@ -236,6 +239,8 @@ void		check(char **cub, t_pos *pos)
 		else if (cub[i][0] == 'W' && cub[i][1] == 'E')
 			set_path(pos, cub[i]);
 		else if (cub[i][0] == 'E' && cub[i][1] == 'A')
+			set_path(pos, cub[i]);
+		else if (cub[i][0] == 'S' && cub[i][1] == ' ')
 			set_path(pos, cub[i]);
 		else if (cub[i][0] == 'F')
 			pos->colorF = colorForC(cub[i]);
