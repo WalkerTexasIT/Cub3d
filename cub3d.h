@@ -75,8 +75,13 @@ typedef struct	s_pos {
 	int		texY;
 	double	step;
 	double	texPos;
-	double	spriteDistance;
+	double	*spriteDistance;
 	int		numSprite;
+	int		*spriteOrder;
+	int		**posSprite;
+	double	spriteX;
+	double	spriteY;
+	double	intDet;
 }				t_pos;
 
 int				ft_strlen(const char *src);

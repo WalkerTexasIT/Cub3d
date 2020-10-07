@@ -12,6 +12,12 @@
 
 #include "cub3d.h"
 
+void	free_value(t_pos *pos)
+{
+	if (pos->spriteOrder)
+		free(pos->spriteOrder);
+}
+
 void	ft_free_map(t_pos *pos)
 {
 	int i;
@@ -42,6 +48,7 @@ void	free_all_txt(t_txt *txt)
 void	ft_free_all(t_pos *pos, char *ret)
 {
 	printf("%s\n", ret);
+	free_value(pos);
 	free_all_txt(pos);
 	ft_free_map(pos);
 	mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);

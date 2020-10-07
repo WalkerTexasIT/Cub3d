@@ -14,6 +14,33 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+int		**posSprite(t_pos *pos)
+{
+	int		i;
+	int		a;
+	int		b;
+	int		posSprite[pos->numSprite][2];
+
+	i = 0;
+	a = 0;
+	while (pos->map[a] != NULL)
+	{
+		b = 0;
+		while (pos->map[a][b] != '\0')
+		{
+			if (pos->map[a][b] == '2')
+			{
+				posSprite[i][0] = b;
+				posSprite[i][1] = a;
+				i++;
+			}
+			b++;
+		}
+		a++;
+	}
+	return (posSprite);
+}
+
 int		countsprite(t_pos *pos)
 {
 	int n;
@@ -36,15 +63,33 @@ int		countsprite(t_pos *pos)
 	return (n);
 }
 
+void	init_all_value(t_pos *pos)
+{
+	if (!(pos->spriteOrder = (int*)malloc(sizeof(int) * pos->numSprite)))
+		ft_free_all(pos, "malloc spriteOrder");
+	if (!(pos->spriteDistance = (double*)malloc(sizeof(double) * pos->numSprite)))
+		ft_free_all(pos, "malloc spriteOrder");
+	pos->posSprite = posSprite(pos);
+}
+
 void	init_sprite(t_pos *pos)
 {
 	int i;
-	int	spriteOrder[pos->numSprite]
 
 	i = 0;
 	while (i < pos->numSprite)
 	{
-		spriteOrder[i] = i;
+		pos->spriteOrder[i] = i;
+		pos->spriteDistance[i] = ((pos->posX - pos->posSprite[i][0]) * (pos->posX * pos->posSprite[i][0]) + (pos->posY - pos->posSprite[i][1]) * (pos->posY - pos->posSprite[i][1]));
+	}
+	i = 0;
+	while (i < pos->numSprite)
+	{
+		pos->spriteX = pos->posSprite[i][0] - pos->posX;
+		pos->spriteY = pos->posSprite[i][1] - pos->posY;
+		pos->intDet = 1.0 / (pos->planeX * pos->dirY - pos->dirX * pos->planeY);
+		pos->transformX = pos->intDet
+		pos->transformY =
 	}
 }
 
@@ -282,6 +327,8 @@ int		init(t_pos *pos)
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
 	init_tex(pos);
+	pos->numSprite = count_sprite(pos);
+	init_all_value(pos);
 	algo(pos);
 	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
 		return (-1);
