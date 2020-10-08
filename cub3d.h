@@ -25,11 +25,11 @@ typedef struct	s_txt {
 	void	**voidtxt;
 	char	**chartxt;
 	int		**txt;
-	int		height[4];
-	int		width[4];
-	int		bits[4];
-	int		sl[4];
-	int		end[4];
+	int		height[5];
+	int		width[5];
+	int		bits[5];
+	int		sl[5];
+	int		end[5];
 }				t_txt;
 
 typedef struct	s_pos {
@@ -82,6 +82,17 @@ typedef struct	s_pos {
 	double	spriteX;
 	double	spriteY;
 	double	intDet;
+	double	transformX;
+	double	transformY;
+	int		spriteScreenX;
+	int		spriteHeight;
+	int		drawStartY;
+	int		drawStartX;
+	int		drawEndX;
+	int		drawEndY;
+	int		spriteWidth;
+	int		stripe;
+	double	*ZBuffer;
 }				t_pos;
 
 int				ft_strlen(const char *src);

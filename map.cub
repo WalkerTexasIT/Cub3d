@@ -5,14 +5,14 @@ SO ./greystone.xpm
 WE ./redbrick.xpm
 EA ./wood.xpm
 
-S ./path_to_the_sprite_texture
+S ./barrel.xpm
 F 220,100,255
 C 225,30,0
 
 11111111
 10001001
 10000011
-11100001
+11102001
 10000001
 1000S001
 10000001

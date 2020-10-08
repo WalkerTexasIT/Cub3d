@@ -49,7 +49,7 @@ void	ft_free_all(t_pos *pos, char *ret)
 {
 	printf("%s\n", ret);
 	free_value(pos);
-	free_all_txt(pos);
+	free_all_txt(pos->txt);
 	ft_free_map(pos);
 	mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 	exit(0);

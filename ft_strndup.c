@@ -69,6 +69,5 @@ char		*ft_strnum(char *string, int n)
 	while (string[n] != '\0' && string[n] != '\n')
 		dest[i++] = string[n++];
 	dest[i] = '\0';
-	printf("%s", dest);
 	return (dest);
 }

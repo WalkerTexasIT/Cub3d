@@ -19,10 +19,13 @@ int		**posSprite(t_pos *pos)
 	int		i;
 	int		a;
 	int		b;
-	int		posSprite[pos->numSprite][2];
+	int		** posSprite;
+	//int		posSprite[pos->numSprite][2];
 
 	i = 0;
 	a = 0;
+	if (!(posSprite = (int**)malloc(sizeof(int[2]) * pos->numSprite)))
+		ft_free_all(pos, "malloc posSprite");
 	while (pos->map[a] != NULL)
 	{
 		b = 0;
@@ -41,7 +44,7 @@ int		**posSprite(t_pos *pos)
 	return (posSprite);
 }
 
-int		countsprite(t_pos *pos)
+int		count_sprite(t_pos *pos)
 {
 	int n;
 	int a;
@@ -70,11 +73,16 @@ void	init_all_value(t_pos *pos)
 	if (!(pos->spriteDistance = (double*)malloc(sizeof(double) * pos->numSprite)))
 		ft_free_all(pos, "malloc spriteOrder");
 	pos->posSprite = posSprite(pos);
+	if (!(pos->ZBuffer = (double*)malloc(sizeof(double) * pos->size_x)))
+		ft_free_all(pos, "ZBuffer malloc");
 }
 
 void	init_sprite(t_pos *pos)
 {
 	int i;
+	int	y;
+	int	d;
+	int	color;
 
 	i = 0;
 	while (i < pos->numSprite)
@@ -88,8 +96,38 @@ void	init_sprite(t_pos *pos)
 		pos->spriteX = pos->posSprite[i][0] - pos->posX;
 		pos->spriteY = pos->posSprite[i][1] - pos->posY;
 		pos->intDet = 1.0 / (pos->planeX * pos->dirY - pos->dirX * pos->planeY);
-		pos->transformX = pos->intDet
-		pos->transformY =
+		pos->transformX = pos->intDet * (pos->dirY * pos->spriteX - pos->dirX * pos->spriteY);
+		pos->transformY = pos->intDet * (-pos->planeY * pos->spriteX + pos->planeX * pos->spriteY);
+		pos->spriteScreenX = (int)(pos->size_x / 2) * (1 + pos->transformX / pos->transformY);
+		pos->spriteHeight = abs((int)(pos->size_y / pos->transformY));
+		pos->drawStartY = -pos->spriteHeight / 2 + pos->size_y / 2;
+		pos->drawStartY = (pos->drawStartY < 0) ? 0 : pos->drawStartY;
+		pos->drawEndY = pos->spriteHeight / 2 + pos->size_y / 2;
+		pos->drawEndY = (pos->drawEndY >= pos->size_y) ? pos->size_y - 1 : pos->drawEndY;
+		pos->spriteWidth = abs((int)(pos->size_y / pos->transformY));
+		pos->drawStartX = -pos->spriteWidth / 2 + pos->spriteScreenX;
+		pos->drawStartX = (pos->drawStartX < 0) ? 0 : pos->drawStartX;
+		pos->drawEndX = pos->spriteWidth / 2 + pos->spriteScreenX;
+		pos->drawEndX = (pos->drawEndX >= pos->size_x) ? pos->size_x - 1 : pos->drawEndX;
+		pos->stripe = pos->drawStartX;
+		while (pos->stripe < pos->drawEndX)
+		{
+			pos->texX = ((int)(256 * (pos->stripe - (-pos->spriteWidth / 2 + pos->spriteScreenX)) * pos->txt->width[4] / pos->spriteWidth)) / 256;
+			if (pos->transformY > 0 && pos->stripe > 0 && pos->stripe < pos->size_x && pos->transformY < pos->ZBuffer[pos->stripe])
+			{
+				y = pos->drawStartY;
+				while (y < pos->drawEndY)
+				{
+					d = (y) * 256 - pos->size_y * 128 + pos->spriteHeight * 128;
+					pos->texY = ((d * pos->txt->height[4]) / pos->spriteHeight) / 256;
+					color = pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX];
+					if ((color & 0x00FFFFFF) != 0)
+						pos->img_data[(pos->size_x * pos->stripe) + pos->stripe] = color;
+					y++;
+				}
+			}
+			pos->stripe++;
+		}
 	}
 }
 
@@ -144,7 +182,7 @@ void	init_tex(t_pos *pos)
 	if (!(pos->txt->voidtxt[3] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkW,
 		&pos->txt->width[3], &pos->txt->height[3])))
 		return (ft_free_all(pos, "xpm to ... W"));
-	if (!(pos->txt->voidtxt[4] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkSprite,
+	if (!(pos->txt->voidtxt[4] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linksprite,
 		&pos->txt->width[4], &pos->txt->height[4])))
 		return (ft_free_all(pos, "xpm to ... W"));
 	if (make_data_adress(pos->txt) == NULL)
@@ -261,10 +299,11 @@ int		algo(t_pos *pos)
 			n += pos->size_x;
 			i++;
 		}
-		// sprite
-		pos->numSprite = count_sprite(pos);
-		init_sprite(pos);
+		pos->ZBuffer[x] = pos->perpWallDist;
 	}
+	// sprite
+	pos->numSprite = count_sprite(pos);
+	init_sprite(pos);
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
 	return (0);
 }
@@ -326,6 +365,7 @@ int		init(t_pos *pos)
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
+	printf("test\n");
 	init_tex(pos);
 	pos->numSprite = count_sprite(pos);
 	init_all_value(pos);
