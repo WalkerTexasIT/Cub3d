@@ -19,23 +19,23 @@ int		**posSprite(t_pos *pos)
 	int		i;
 	int		a;
 	int		b;
-	int		** posSprite;
-	//int		posSprite[pos->numSprite][2];
+	int		**posSprite;
 
 	i = 0;
 	a = 0;
-	if (!(posSprite = (int**)malloc(sizeof(int[2]) * pos->numSprite)))
+	if (!(posSprite = (int**)malloc(sizeof(int*) * pos->numSprite)))
 		ft_free_all(pos, "malloc posSprite");
 	while (pos->map[a] != NULL)
 	{
+		if (!(posSprite[i] = (int*)malloc(sizeof(int) * 2)))
+			ft_free_all(pos, "malloc posSprite");
 		b = 0;
 		while (pos->map[a][b] != '\0')
 		{
 			if (pos->map[a][b] == '2')
 			{
 				posSprite[i][0] = b;
-				posSprite[i][1] = a;
-				i++;
+				posSprite[i++][1] = a;
 			}
 			b++;
 		}
@@ -89,6 +89,7 @@ void	init_sprite(t_pos *pos)
 	{
 		pos->spriteOrder[i] = i;
 		pos->spriteDistance[i] = ((pos->posX - pos->posSprite[i][0]) * (pos->posX * pos->posSprite[i][0]) + (pos->posY - pos->posSprite[i][1]) * (pos->posY - pos->posSprite[i][1]));
+		i++;
 	}
 	i = 0;
 	while (i < pos->numSprite)
@@ -128,6 +129,7 @@ void	init_sprite(t_pos *pos)
 			}
 			pos->stripe++;
 		}
+		i++;
 	}
 }
 
@@ -365,7 +367,6 @@ int		init(t_pos *pos)
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
-	printf("test\n");
 	init_tex(pos);
 	pos->numSprite = count_sprite(pos);
 	init_all_value(pos);

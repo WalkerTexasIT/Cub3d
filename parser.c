@@ -42,13 +42,13 @@ int		verifmap(t_pos *pos)
 		n = 0;
 		while(pos->map[i][n])
 		{
-			if (pos->map[i][n] == '0')
+			if (pos->map[i][n] == '0' || pos->map[i][n] == '2')
 			{
-				if (pos->map[i][n - 1] != '0' && pos->map[i][n - 1] != '1')
+				if (pos->map[i][n - 1] != '0' && pos->map[i][n - 1] != '1' && pos->map[i][n - 1] != '2')
 					return (0);
-				if (pos->map[i - 1][n] != '0' && pos->map[i - 1][n] != '1')
+				if (pos->map[i - 1][n] != '0' && pos->map[i - 1][n] != '1' && pos->map[i - 1][n] != '2')
 					return (0);
-				if (pos->map[i][n + 1] != '0' && pos->map[i][n + 1] != '1')
+				if (pos->map[i][n + 1] != '0' && pos->map[i][n + 1] != '1' && pos->map[i][n + 1] != '2')
 					return (0);
 			}
 			n++;
@@ -161,13 +161,13 @@ char		**map(char **cub, int i, t_pos *pos)
 
 	a = 0;
 	if (!(map = (char**)malloc(sizeof(char*) * (countline(cub, i) + 1))))
-		return (0);
+		ft_free_all(pos, "malloc map **");
 	while (cub[i] != 0)
 	{
 		j = 0;
 		b = 0;
 		if (!(map[a] = (char*)malloc(sizeof(char) * (count(cub[i]) + 1))))
-			return (0);
+			ft_free_all(pos, "malloc map *");
 		while (cub[i][j] != '\0')
 		{
 			if (cub[i][j] == '0' || cub[i][j] == '1' || cub[i][j] == '2' || cub[i][j] == ' ')
@@ -275,10 +275,6 @@ int		parser(char **argv, t_pos *pos)
 	map = get_line(fd);
 	check(map, pos);
 	if (verifmap(pos) == 0)
-	{
-		printf("test\n");
-		printf("false\n");
-		return (-1);
-	}
+		ft_free_all(pos, "erreur map");
 	return (0);
 }

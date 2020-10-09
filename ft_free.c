@@ -16,6 +16,16 @@ void	free_value(t_pos *pos)
 {
 	if (pos->spriteOrder)
 		free(pos->spriteOrder);
+	if (pos->linkN)
+		free(pos->linkN);
+	if (pos->linkS)
+		free(pos->linkS);
+	if (pos->linkE)
+		free(pos->linkE);
+	if (pos->linkW)
+		free(pos->linkW);
+	if (pos->linksprite)
+		free(pos->linksprite);
 }
 
 void	ft_free_map(t_pos *pos)
