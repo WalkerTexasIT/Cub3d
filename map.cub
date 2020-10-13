@@ -5,7 +5,7 @@ SO ./greystone.xpm
 WE ./redbrick.xpm
 EA ./wood.xpm
 
-S ./barrel.xpm
+S ./basket.xpm
 F 220,100,255
 C 225,30,0
 

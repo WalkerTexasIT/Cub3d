@@ -97,6 +97,7 @@ void	init_sprite(t_pos *pos)
 		pos->spriteX = pos->posSprite[i][0] - pos->posX;
 		pos->spriteY = pos->posSprite[i][1] - pos->posY;
 		pos->intDet = 1.0 / (pos->planeX * pos->dirY - pos->dirX * pos->planeY);
+		//pos->intDet = 1.0 / (pos->dirY * pos->planeX - -pos->dirX * -pos->planeY);
 		pos->transformX = pos->intDet * (pos->dirY * pos->spriteX - pos->dirX * pos->spriteY);
 		pos->transformY = pos->intDet * (-pos->planeY * pos->spriteX + pos->planeX * pos->spriteY);
 		pos->spriteScreenX = (int)((pos->size_x / 2) * (1 + pos->transformX / pos->transformY));
@@ -121,7 +122,7 @@ void	init_sprite(t_pos *pos)
 				{
 					d = (y) * 256 - pos->size_y * 128 + pos->spriteHeight * 128;
 					pos->texY = ((d * pos->txt->height[4]) / pos->spriteHeight) / 256;
-					color = pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX];
+					color = pos->txt->txt[4][pos->txt->width[4] * pos->texX + pos->texY];
 					if ((color & 0x00FFFFFF) != 0)
 						pos->img_data[(pos->size_x * pos->stripe) + y] = color;
 					y++;
@@ -363,7 +364,7 @@ int		init(t_pos *pos)
 	int n;
 
 	pos->mlx_ptr = mlx_init();
-	pos->win_ptr = mlx_new_window(pos->mlx_ptr, pos->size_x, pos->size_y, "CashGame");
+	pos->win_ptr = mlx_new_window(pos->mlx_ptr, pos->size_x, pos->size_y, "NBA 1k83");
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
