@@ -99,7 +99,7 @@ void	init_sprite(t_pos *pos)
 		pos->intDet = 1.0 / (pos->planeX * pos->dirY - pos->dirX * pos->planeY);
 		pos->transformX = pos->intDet * (pos->dirY * pos->spriteX - pos->dirX * pos->spriteY);
 		pos->transformY = pos->intDet * (-pos->planeY * pos->spriteX + pos->planeX * pos->spriteY);
-		pos->spriteScreenX = (int)(pos->size_x / 2) * (1 + pos->transformX / pos->transformY);
+		pos->spriteScreenX = (int)((pos->size_x / 2) * (1 + pos->transformX / pos->transformY));
 		pos->spriteHeight = abs((int)(pos->size_y / pos->transformY));
 		pos->drawStartY = -pos->spriteHeight / 2 + pos->size_y / 2;
 		pos->drawStartY = (pos->drawStartY < 0) ? 0 : pos->drawStartY;
@@ -123,7 +123,7 @@ void	init_sprite(t_pos *pos)
 					pos->texY = ((d * pos->txt->height[4]) / pos->spriteHeight) / 256;
 					color = pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX];
 					if ((color & 0x00FFFFFF) != 0)
-						pos->img_data[(pos->size_x * pos->stripe) + pos->stripe] = color;
+						pos->img_data[(pos->size_x * pos->stripe) + y] = color;
 					y++;
 				}
 			}
