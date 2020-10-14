@@ -14,6 +14,36 @@
 
 //gcc -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx *.c
 
+void	sortSprite(t_pos *pos)
+{
+	int i;
+	int n;
+	int	temp;
+
+	i = pos->numSprite;
+	while (i > 1)
+	{
+		n = 0;
+		while (n < i)
+		{
+			if (pos->spriteDistance[n] < pos->spriteDistance[n + 1])
+			{
+				temp = pos->spriteOrder[n];
+				pos->spriteOrder[n] = pos->spriteOrder[n + 1];
+				pos->spriteOrder[n + 1] = temp;
+			}
+			n++;
+		}
+		i--;
+	}
+	n = 0;
+	while (n != pos->numSprite)
+	{
+		printf("%d\n", pos->spriteOrder[n]);
+		n++;
+	}
+}
+
 int		**posSprite(t_pos *pos)
 {
 	int		i;
@@ -91,11 +121,13 @@ void	init_sprite(t_pos *pos)
 		pos->spriteDistance[i] = ((pos->posX - pos->posSprite[i][0]) * (pos->posX * pos->posSprite[i][0]) + (pos->posY - pos->posSprite[i][1]) * (pos->posY - pos->posSprite[i][1]));
 		i++;
 	}
+	if (pos->numSprite > 1)
+		sortSprite(pos);
 	i = 0;
 	while (i < pos->numSprite)
 	{
-		pos->spriteX = pos->posSprite[i][0] - pos->posX;
-		pos->spriteY = pos->posSprite[i][1] - pos->posY;
+		pos->spriteX = pos->posSprite[pos->spriteOrder[i]][0] - pos->posX;
+		pos->spriteY = pos->posSprite[pos->spriteOrder[i]][1] - pos->posY;
 		pos->intDet = 1.0 / (pos->planeX * pos->dirY - pos->dirX * pos->planeY);
 		//pos->intDet = 1.0 / (pos->dirY * pos->planeX - -pos->dirX * -pos->planeY);
 		pos->transformX = pos->intDet * (pos->dirY * pos->spriteX - pos->dirX * pos->spriteY);
