@@ -34,8 +34,8 @@ int		**posSprite(t_pos *pos)
 		{
 			if (pos->map[a][b] == '2')
 			{
-				posSprite[i][0] = b;
-				posSprite[i++][1] = a;
+				posSprite[i][0] = b + 0.5;
+				posSprite[i++][1] = a + 0.5;
 			}
 			b++;
 		}
@@ -114,7 +114,7 @@ void	init_sprite(t_pos *pos)
 		pos->stripe = pos->drawStartX;
 		while (pos->stripe < pos->drawEndX)
 		{
-			pos->texX = ((int)(256 * (pos->stripe - (-pos->spriteWidth / 2 + pos->spriteScreenX)) * pos->txt->width[4] / pos->spriteWidth)) / 256;
+			pos->texX = (int)(256 * (pos->stripe - (-pos->spriteWidth / 2 + pos->spriteScreenX)) * pos->txt->width[4] / pos->spriteWidth) / 256;
 			if (pos->transformY > 0 && pos->stripe > 0 && pos->stripe < pos->size_x && pos->transformY < pos->ZBuffer[pos->stripe])
 			{
 				y = pos->drawStartY;
@@ -122,9 +122,9 @@ void	init_sprite(t_pos *pos)
 				{
 					d = (y) * 256 - pos->size_y * 128 + pos->spriteHeight * 128;
 					pos->texY = ((d * pos->txt->height[4]) / pos->spriteHeight) / 256;
-					color = pos->txt->txt[4][pos->txt->width[4] * pos->texX + pos->texY];
+					color = pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX];
 					if ((color & 0x00FFFFFF) != 0)
-						pos->img_data[(pos->size_x * pos->stripe) + y] = color;
+						pos->img_data[(pos->size_x * y) + pos->stripe] = color;
 					y++;
 				}
 			}
