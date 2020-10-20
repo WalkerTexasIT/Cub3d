@@ -6,7 +6,7 @@ WE ./redbrick.xpm
 EA ./wood.xpm
 
 S ./barrel.xpm
-F 220,100,255
+F 220,100,0
 C 225,30,0
 
 11111111

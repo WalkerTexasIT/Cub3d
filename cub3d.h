@@ -18,8 +18,8 @@
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-# define MoveSpeed 0.1
-# define Rotate 0.05
+# define MoveSpeed 0.2
+# define Rotate 0.1
 
 typedef struct	s_txt {
 	void	**voidtxt;
@@ -78,7 +78,7 @@ typedef struct	s_pos {
 	double	*spriteDistance;
 	int		numSprite;
 	int		*spriteOrder;
-	int		**posSprite;
+	double	**posSprite;
 	double	spriteX;
 	double	spriteY;
 	double	intDet;

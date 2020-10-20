@@ -20,56 +20,42 @@ void	sortSprite(t_pos *pos)
 	int n;
 	int	temp;
 
-	i = pos->numSprite;
-	while (i > 1)
-	{
-		n = 0;
-		while (n < i)
-		{
+	i = -1;
+	n = -1;
+	while (++i < pos->numSprite - 1)
+		while (++n < pos->numSprite - i - 1)
 			if (pos->spriteDistance[n] < pos->spriteDistance[n + 1])
 			{
 				temp = pos->spriteOrder[n];
 				pos->spriteOrder[n] = pos->spriteOrder[n + 1];
 				pos->spriteOrder[n + 1] = temp;
 			}
-			n++;
-		}
-		i--;
-	}
-	n = 0;
-	while (n != pos->numSprite)
-	{
-		printf("%d\n", pos->spriteOrder[n]);
-		n++;
-	}
 }
 
-int		**posSprite(t_pos *pos)
+double	**posSprite(t_pos *pos)
 {
 	int		i;
 	int		a;
 	int		b;
-	int		**posSprite;
+	double	**posSprite;
 
 	i = 0;
-	a = 0;
-	if (!(posSprite = (int**)malloc(sizeof(int*) * pos->numSprite)))
+	a = -1;
+	if (!(posSprite = (double**)malloc(sizeof(double*) * pos->numSprite)))
 		ft_free_all(pos, "malloc posSprite");
-	while (pos->map[a] != NULL)
+	while (pos->map[++a] != NULL)
 	{
-		if (!(posSprite[i] = (int*)malloc(sizeof(int) * 2)))
+		if (!(posSprite[i] = (double*)malloc(sizeof(double) * 2)))
 			ft_free_all(pos, "malloc posSprite");
-		b = 0;
-		while (pos->map[a][b] != '\0')
+		b = -1;
+		while (pos->map[a][++b] != '\0')
 		{
 			if (pos->map[a][b] == '2')
 			{
 				posSprite[i][0] = b + 0.5;
 				posSprite[i++][1] = a + 0.5;
 			}
-			b++;
 		}
-		a++;
 	}
 	return (posSprite);
 }
@@ -81,17 +67,13 @@ int		count_sprite(t_pos *pos)
 	int b;
 
 	n = 0;
-	a = 0;
-	while (pos->map[a] != NULL)
+	a = -1;
+	while (pos->map[++a] != NULL)
 	{
-		b = 0;
-		while (pos->map[a][b] != '\0')
-		{
+		b = -1;
+		while (pos->map[a][++b] != '\0')
 			if (pos->map[a][b] == '2')
 				n++;
-			b++;
-		}
-		a++;
 	}
 	return (n);
 }
@@ -336,42 +318,43 @@ int		algo(t_pos *pos)
 		}
 		pos->ZBuffer[x] = pos->perpWallDist;
 	}
-	// sprite
-	pos->numSprite = count_sprite(pos);
+	printf("test avant sprite\n");
 	init_sprite(pos);
+	printf("test avant put image\n");
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
 	return (0);
 }
 
 int		initkey(int key, t_pos *pos)
 {
+	printf("test avant verif w\n");
 	//printf("%d\n", key);
 	if (key == 13) // W
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirX * MoveSpeed)] == '0')
+		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirX * MoveSpeed)] != '1')
 			pos->posX += pos->dirX * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
+		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] != '1')
 			pos->posY += pos->dirY * MoveSpeed;
 	}
 	if (key == 2) // D
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed)] == '0')
+		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed)] != '1')
 			pos->posX += -pos->dirY * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed)][(int)pos->posX] == '0')
+		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed)][(int)pos->posX] != '1')
 			pos->posY += pos->dirX * MoveSpeed;
 	}
 	if (key == 1) // S
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirX * MoveSpeed)] == '0')
+		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirX * MoveSpeed)] != '1')
 			pos->posX -= pos->dirX * MoveSpeed;
-		if (pos->map[(int)(pos->posY - pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
+		if (pos->map[(int)(pos->posY - pos->dirY * MoveSpeed)][(int)pos->posX] != '1')
 			pos->posY -= pos->dirY * MoveSpeed;
 	}
 	if (key == 0) // A
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirY * MoveSpeed)] == '0')
+		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirY * MoveSpeed)] != '1')
 			pos->posX += pos->dirY * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] == '0')
+		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] != '1')
 			pos->posY += -pos->dirX * MoveSpeed;
 	}
 	if (key == 124) // fleche droite
@@ -380,11 +363,13 @@ int		initkey(int key, t_pos *pos)
 		rot(pos, 'L');
 	if (key == 53) // ESC
 	{
-		ft_free_map(pos);
+		ft_free_all(pos, "esc");
 		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 		exit(0);
 	}
+	printf("test avant clear window\n");
 	mlx_clear_window(pos->mlx_ptr, pos->win_ptr);
+	printf("test avant 2eme algo");
 	algo(pos);
 	return (0);
 }
@@ -404,8 +389,8 @@ int		init(t_pos *pos)
 	pos->numSprite = count_sprite(pos);
 	init_all_value(pos);
 	algo(pos);
-	if (mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos) == -1)
-		return (-1);
+	printf("test\n");
+	mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos);
 	mlx_loop(pos->mlx_ptr);
 	return (0);
 }
