@@ -123,8 +123,8 @@ void		define(char c, t_pos *pos, int a, int b)
 		pos->planeX = 0;
 		pos->planeY = -0.66;
 	}
-	pos->posX = (double)a;
-	pos->posY = (double)b;
+	pos->posX = (double)a + 0.1;
+	pos->posY = (double)b + 0.1;
 }
 
 int			count(char *cub)

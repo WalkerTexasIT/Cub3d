@@ -97,15 +97,18 @@ void	init_sprite(t_pos *pos)
 	int	color;
 
 	i = 0;
+	printf("test avant 1re boucle\n");
 	while (i < pos->numSprite)
 	{
 		pos->spriteOrder[i] = i;
 		pos->spriteDistance[i] = ((pos->posX - pos->posSprite[i][0]) * (pos->posX * pos->posSprite[i][0]) + (pos->posY - pos->posSprite[i][1]) * (pos->posY - pos->posSprite[i][1]));
 		i++;
 	}
+	printf("test avant sortsprite\n");
 	if (pos->numSprite > 1)
 		sortSprite(pos);
 	i = 0;
+	printf("test avant premiere boucle\n");
 	while (i < pos->numSprite)
 	{
 		pos->spriteX = pos->posSprite[pos->spriteOrder[i]][0] - pos->posX;
@@ -126,17 +129,23 @@ void	init_sprite(t_pos *pos)
 		pos->drawEndX = pos->spriteWidth / 2 + pos->spriteScreenX;
 		pos->drawEndX = (pos->drawEndX >= pos->size_x) ? pos->size_x - 1 : pos->drawEndX;
 		pos->stripe = pos->drawStartX;
+		printf("test avant drawstartX\n");
 		while (pos->stripe < pos->drawEndX)
 		{
 			pos->texX = (int)(256 * (pos->stripe - (-pos->spriteWidth / 2 + pos->spriteScreenX)) * pos->txt->width[4] / pos->spriteWidth) / 256;
 			if (pos->transformY > 0 && pos->stripe > 0 && pos->stripe < pos->size_x && pos->transformY < pos->ZBuffer[pos->stripe])
 			{
 				y = pos->drawStartY;
+				// printf("test avant drawstartY\n");
 				while (y < pos->drawEndY)
 				{
+					printf("ici1\n");
 					d = (y) * 256 - pos->size_y * 128 + pos->spriteHeight * 128;
+					printf("ici2\n");
 					pos->texY = ((d * pos->txt->height[4]) / pos->spriteHeight) / 256;
+					printf("ici3 %d, %d, %d\n", pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX], pos->texY, pos->texX);
 					color = pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX];
+					printf("%d\n", (pos->size_x * y) + pos->stripe);
 					if ((color & 0x00FFFFFF) != 0)
 						pos->img_data[(pos->size_x * y) + pos->stripe] = color;
 					y++;
@@ -146,6 +155,7 @@ void	init_sprite(t_pos *pos)
 		}
 		i++;
 	}
+	printf("test avant jsp\n");
 }
 
 int		texturing(t_pos *pos, int texnum)
@@ -338,9 +348,9 @@ int		initkey(int key, t_pos *pos)
 	}
 	if (key == 2) // D
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed)] != '1')
+		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed + 0.1)] != '1')
 			pos->posX += -pos->dirY * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed)][(int)pos->posX] != '1')
+		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed + 0.1)][(int)pos->posX] != '1')
 			pos->posY += pos->dirX * MoveSpeed;
 	}
 	if (key == 1) // S
@@ -389,10 +399,16 @@ int		init(t_pos *pos)
 	pos->numSprite = count_sprite(pos);
 	init_all_value(pos);
 	algo(pos);
-	printf("test\n");
-	mlx_hook(pos->win_ptr, 2, 0, initkey, &*pos);
-	mlx_loop(pos->mlx_ptr);
+	printf("test apres premier algo\n");
 	return (0);
+}
+
+void	launch(t_pos *pos)
+{
+	mlx_hook(pos->win_ptr, 2, 0, initkey, pos);
+	printf("test avant loop\n");
+	mlx_loop(pos->mlx_ptr);
+	printf("test apres loop\n");
 }
 
 int		main(int argc, char **argv)
@@ -405,7 +421,7 @@ int		main(int argc, char **argv)
 		return (0);
 	//pos.size_x = 1080;
 	//pos.size_y = 768;
-	if (init(&pos) == -1)
-		return (0);
+	init(&pos);
+	launch(&pos);
 	return (0);
 }
