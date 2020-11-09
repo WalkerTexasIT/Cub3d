@@ -35,10 +35,11 @@ void	ft_free_map(t_pos *pos)
 	i = 0;
 	if (pos->map)
 	{
-		while (pos->map[i] != 0)
+		while (pos->map[i])
 		{
-			if (pos->map[i])
-				free(pos->map[i++]);
+			free(pos->map[i]);
+			//pos->map[i] = NULL;
+			i++;
 		}
 		free(pos->map);
 	}
@@ -59,8 +60,16 @@ void	ft_free_all(t_pos *pos, char *ret)
 {
 	printf("%s\n", ret);
 	free_value(pos);
-	free_all_txt(pos->txt);
+	if (ret != "erreur map")
+		free_all_txt(pos->txt);
 	ft_free_map(pos);
-	mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
+	if (ret != "erreur map")
+		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 	exit(0);
+}
+
+int		finish(t_pos *pos)
+{
+	ft_free_all(pos, "");
+	return (0);
 }

@@ -97,18 +97,15 @@ void	init_sprite(t_pos *pos)
 	int	color;
 
 	i = 0;
-	printf("test avant 1re boucle\n");
 	while (i < pos->numSprite)
 	{
 		pos->spriteOrder[i] = i;
 		pos->spriteDistance[i] = ((pos->posX - pos->posSprite[i][0]) * (pos->posX * pos->posSprite[i][0]) + (pos->posY - pos->posSprite[i][1]) * (pos->posY - pos->posSprite[i][1]));
 		i++;
 	}
-	printf("test avant sortsprite\n");
 	if (pos->numSprite > 1)
 		sortSprite(pos);
 	i = 0;
-	printf("test avant premiere boucle\n");
 	while (i < pos->numSprite)
 	{
 		pos->spriteX = pos->posSprite[pos->spriteOrder[i]][0] - pos->posX;
@@ -129,23 +126,17 @@ void	init_sprite(t_pos *pos)
 		pos->drawEndX = pos->spriteWidth / 2 + pos->spriteScreenX;
 		pos->drawEndX = (pos->drawEndX >= pos->size_x) ? pos->size_x - 1 : pos->drawEndX;
 		pos->stripe = pos->drawStartX;
-		printf("test avant drawstartX\n");
 		while (pos->stripe < pos->drawEndX)
 		{
 			pos->texX = (int)(256 * (pos->stripe - (-pos->spriteWidth / 2 + pos->spriteScreenX)) * pos->txt->width[4] / pos->spriteWidth) / 256;
 			if (pos->transformY > 0 && pos->stripe > 0 && pos->stripe < pos->size_x && pos->transformY < pos->ZBuffer[pos->stripe])
 			{
 				y = pos->drawStartY;
-				// printf("test avant drawstartY\n");
 				while (y < pos->drawEndY)
 				{
-					printf("ici1\n");
 					d = (y) * 256 - pos->size_y * 128 + pos->spriteHeight * 128;
-					printf("ici2\n");
 					pos->texY = ((d * pos->txt->height[4]) / pos->spriteHeight) / 256;
-					printf("ici3 %d, %d, %d\n", pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX], pos->texY, pos->texX);
 					color = pos->txt->txt[4][pos->txt->width[4] * pos->texY + pos->texX];
-					printf("%d\n", (pos->size_x * y) + pos->stripe);
 					if ((color & 0x00FFFFFF) != 0)
 						pos->img_data[(pos->size_x * y) + pos->stripe] = color;
 					y++;
@@ -155,7 +146,6 @@ void	init_sprite(t_pos *pos)
 		}
 		i++;
 	}
-	printf("test avant jsp\n");
 }
 
 int		texturing(t_pos *pos, int texnum)
@@ -195,7 +185,7 @@ void	init_tex(t_pos *pos)
 {
 	if (!(pos->txt = malloc(sizeof(t_txt))))
 		return (ft_free_all(pos, "malloc t_txt"));
-	if (!(pos->txt->voidtxt = (void**)malloc(sizeof(void*) * 4)))
+	if (!(pos->txt->voidtxt = (void**)malloc(sizeof(void*) * 5)))
 		return (ft_free_all(pos, "malloc void**"));
 	if (!(pos->txt->voidtxt[0] = (void*)mlx_xpm_file_to_image(pos->mlx_ptr, pos->linkN,
 		&pos->txt->width[0], &pos->txt->height[0])))
@@ -328,60 +318,67 @@ int		algo(t_pos *pos)
 		}
 		pos->ZBuffer[x] = pos->perpWallDist;
 	}
-	printf("test avant sprite\n");
 	init_sprite(pos);
-	printf("test avant put image\n");
 	mlx_put_image_to_window(pos->mlx_ptr, pos->win_ptr, pos->img_ptr, 0 ,0);
 	return (0);
 }
 
-int		initkey(int key, t_pos *pos)
+int		initkey(t_pos *pos)
 {
-	printf("test avant verif w\n");
-	//printf("%d\n", key);
-	if (key == 13) // W
+	printf("test100\n");
+	if (pos->key->key_w == 1) // W
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirX * MoveSpeed)] != '1')
+		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirX * MoveSpeed + (pos->dirX < 0 ? -0.2 : 0.2))] != '1')
 			pos->posX += pos->dirX * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] != '1')
+		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed + (pos->dirY < 0 ? -0.2 : 0.2))][(int)pos->posX] != '1')
 			pos->posY += pos->dirY * MoveSpeed;
+		pos->key->key_w = 0;
 	}
-	if (key == 2) // D
+	if (pos->key->key_d == 1) // D
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed + 0.1)] != '1')
+		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirY * MoveSpeed + (-pos->dirY < 0 ? -0.2 : 0.2))] != '1')
 			pos->posX += -pos->dirY * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed + 0.1)][(int)pos->posX] != '1')
+		if (pos->map[(int)(pos->posY + pos->dirX * MoveSpeed + (pos->dirX < 0 ? -0.2 : 0.2))][(int)pos->posX] != '1')
 			pos->posY += pos->dirX * MoveSpeed;
+		pos->key->key_d = 0;
 	}
-	if (key == 1) // S
+	if (pos->key->key_s == 1) // S
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirX * MoveSpeed)] != '1')
+		if (pos->map[(int)pos->posY][(int)(pos->posX - pos->dirX * MoveSpeed + (-pos->dirX < 0 ? -0.2 : 0.2))] != '1')
 			pos->posX -= pos->dirX * MoveSpeed;
-		if (pos->map[(int)(pos->posY - pos->dirY * MoveSpeed)][(int)pos->posX] != '1')
+		if (pos->map[(int)(pos->posY - pos->dirY * MoveSpeed + (-pos->dirY < 0 ? -0.2 : 0.2))][(int)pos->posX] != '1')
 			pos->posY -= pos->dirY * MoveSpeed;
+		pos->key->key_s = 0;
 	}
-	if (key == 0) // A
+	if (pos->key->key_a == 1) // A
 	{
-		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirY * MoveSpeed)] != '1')
+		if (pos->map[(int)pos->posY][(int)(pos->posX + pos->dirY * MoveSpeed + (pos->dirY < 0 ? -0.2 : 0.2))] != '1')
 			pos->posX += pos->dirY * MoveSpeed;
-		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed)][(int)pos->posX] != '1')
+		if (pos->map[(int)(pos->posY + pos->dirY * MoveSpeed + (-pos->dirX < 0 ? -0.2 : 0.2))][(int)pos->posX] != '1')
 			pos->posY += -pos->dirX * MoveSpeed;
+		pos->key->key_a = 0;
 	}
-	if (key == 124) // fleche droite
+	if (pos->key->key_right == 1) // fleche droite
 		rot(pos, 'R');
-	if (key == 123) // fleche gauche
+	if (pos->key->key_left == 1) // fleche gauche
 		rot(pos, 'L');
-	if (key == 53) // ESC
-	{
-		ft_free_all(pos, "esc");
-		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
-		exit(0);
-	}
-	printf("test avant clear window\n");
-	mlx_clear_window(pos->mlx_ptr, pos->win_ptr);
-	printf("test avant 2eme algo");
+	if (pos->win_ptr)
+		mlx_clear_window(pos->mlx_ptr, pos->win_ptr);
 	algo(pos);
 	return (0);
+}
+
+void	keyinit(t_pos *pos)
+{
+	t_key	key;
+
+	pos->key = &key;
+	pos->key->key_w = 0;
+	pos->key->key_s = 0;
+	pos->key->key_a = 0;
+	pos->key->key_d = 0;
+	pos->key->key_left = 0;
+	pos->key->key_right = 0;
 }
 
 int		init(t_pos *pos)
@@ -390,25 +387,72 @@ int		init(t_pos *pos)
 	int j;
 	int n;
 
+	printf("test504\n");
 	pos->mlx_ptr = mlx_init();
+	printf("test505\n");
 	pos->win_ptr = mlx_new_window(pos->mlx_ptr, pos->size_x, pos->size_y, "NBA 1k83");
 	pos->img_ptr = mlx_new_image(pos->mlx_ptr, pos->size_x, pos->size_y);
 	pos->charimg_data = mlx_get_data_addr(pos->img_ptr, &i, &j, &n);
 	pos->img_data = (int*)pos->charimg_data;
 	init_tex(pos);
+	printf("test1\n");
 	pos->numSprite = count_sprite(pos);
+	printf("test2\n");
 	init_all_value(pos);
+	printf("test3\n");
+	keyinit(pos);
+	printf("test4\n");
 	algo(pos);
-	printf("test apres premier algo\n");
+	printf("test5\n");
 	return (0);
 }
 
-void	launch(t_pos *pos)
+int		key(int key, void *structure)
 {
-	mlx_hook(pos->win_ptr, 2, 0, initkey, pos);
-	printf("test avant loop\n");
+	t_pos	*pos;
+
+	printf("test404\n");
+	pos = (t_pos*)structure;
+	if (key == 13)
+		pos->key->key_w = 1;
+	if (key == 1)
+		pos->key->key_s = 1;
+	if (key == 2)
+		pos->key->key_d = 1;
+	if (key == 0)
+		pos->key->key_a = 1;
+	if (key == 124)
+		pos->key->key_right = 1;
+	if (key == 123)
+		pos->key->key_left = 1;
+	if (key == 53)
+		ft_free_all(pos, "");
+	if (key == 17)
+		ft_free_all(pos, "");
+	return (0);
+}
+
+t_pos	*initpos(void)
+{
+	t_pos	*pos;
+
+	if (!(pos = (t_pos*)malloc(sizeof(t_pos*))))
+		exit(0);
+	return (pos);
+}
+
+void	boucle(t_pos *pos)
+{
+	printf("test6\n");
+	mlx_hook(pos->win_ptr, 2, 0, key, pos);
+	printf("test7\n");
+	mlx_hook(pos->win_ptr, 3, 0, key, pos);
+	printf("test8\n");
+	mlx_hook(pos->win_ptr, 17, 0, finish, pos);
+	printf("test9\n");
+	mlx_loop_hook(pos->mlx_ptr, initkey, pos);
+	printf("test10\n");
 	mlx_loop(pos->mlx_ptr);
-	printf("test apres loop\n");
 }
 
 int		main(int argc, char **argv)
@@ -417,11 +461,18 @@ int		main(int argc, char **argv)
 
 	if (argc < 2)
 		return (0);
+	//if (!(pos = (t_pos*)malloc(sizeof(t_pos*))))
+	//	return (0);
 	if (parser(argv, &pos) == -1)
 		return (0);
-	//pos.size_x = 1080;
-	//pos.size_y = 768;
+	//printf("%d\n", ft_strncmp(argv[2], "--save", 6));
+	printf("test\n");
 	init(&pos);
-	launch(&pos);
+	printf("test27\n");
+	if (argc == 3)
+		if (ft_strncmp(argv[2], "--save", 6) == 0)
+			make_bmp(&pos);
+	printf("test28\n");
+	boucle(&pos);
 	return (0);
 }

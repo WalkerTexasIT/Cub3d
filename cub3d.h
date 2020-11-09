@@ -12,14 +12,25 @@
 
 #ifndef CUB3D_H
 # define CUB3D_H
-# include <mlx.h>
+# include "./minilibx_opengl/mlx.h"
+# include "./libft/libft.h"
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
 # include <fcntl.h>
 # include <math.h>
-# define MoveSpeed 0.2
-# define Rotate 0.1
+# define MoveSpeed 0.1
+# define Rotate 0.05
+
+typedef struct	s_key {
+	int		key_w;
+	int		key_s;
+	int		key_a;
+	int		key_d;
+	int		key_left;
+	int		key_right;
+}				t_key;
+
 
 typedef struct	s_txt {
 	void	**voidtxt;
@@ -51,6 +62,8 @@ typedef struct	s_pos {
 	double	planeY;
 	int		mapX;
 	int		mapY;
+	int		maphit;
+	int		mapheight;
 	double	deltaDistX;
 	double	deltaDistY;
 	double	sideDistX;
@@ -65,6 +78,7 @@ typedef struct	s_pos {
 	int		colorC;
 	int		colorF;
 	t_txt	*txt;
+	t_key	*key;
 	char	*linkN;
 	char	*linkS;
 	char	*linkE;
@@ -95,17 +109,13 @@ typedef struct	s_pos {
 	double	*ZBuffer;
 }				t_pos;
 
-int				ft_strlen(const char *src);
-char			*ft_strjoin(char const *cache, char const *buff);
-char			*ft_strndup(const char *s, size_t n);
-void			ft_bzero(void *src, size_t n);
 int				parser(char **argv, t_pos *pos);
-char			*ft_substr(char const *s, unsigned int start, size_t len);
-char			**ft_split(char const *s, char c);
 void			ft_free_map(t_pos *pos);
-int				ft_atoi(const char *str);
 void			rot(t_pos *pos, char RorL);
 char			*ft_strnum(char *string, int n);
 void			ft_free_all(t_pos *pos, char *ret);
+int				finish(t_pos *pos);
+void			make_bmp(t_pos *pos);
+int				whitespace(char c);
 
 #endif
