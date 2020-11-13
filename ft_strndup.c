@@ -23,7 +23,11 @@ char		*ft_strnum(char *string, int n)
 		return (0);
 	i = 0;
 	while (string[n] != '\0' && string[n] != '\n')
+	{
+		if (string[n] == ' ')
+			return (0);
 		dest[i++] = string[n++];
+	}
 	dest[i] = '\0';
 	return (dest);
 }

@@ -12,23 +12,45 @@
 
 #include "cub3d.h"
 
+void	verif_xpm_file(t_pos *pos)
+{
+	char	*path;
+	int		n;
+	int		len;
+
+	n = 0;
+	while (n < 5)
+	{
+		path = (n == 0) ? pos->linkn : path;
+		path = (n == 1) ? pos->links : path;
+		path = (n == 2) ? pos->linke : path;
+		path = (n == 3) ? pos->linkw : path;
+		path = (n == 4) ? pos->linksprite : path;
+		len = ft_strlen(path);
+		if (path[len - 1] != 'm' || path[len - 2] != 'p' 
+				|| path[len - 3] != 'x' || path[len - 4] != '.')
+			ft_free_all(pos, "erreur map");
+		n++;
+	}
+}
+
 void	set_path(t_pos *pos, char *line)
 {
 	if (line[0] == 'N' && line[1] == 'O')
-		if(!(pos->linkN = ft_strnum(line, 3)))
-			return (ft_free_all(pos, "strnum N"));
+		if(!(pos->linkn = ft_strnum(line, 3)))
+			return (ft_free_all(pos, "erreur map"));
 	if (line[0] == 'S' && line[1] == 'O')
-		if(!(pos->linkS = ft_strnum(line, 3)))
-			return (ft_free_all(pos, "strnum S"));
+		if(!(pos->links = ft_strnum(line, 3)))
+			return (ft_free_all(pos, "erreur map"));
 	if (line[0] == 'E' && line[1] == 'A')
-		if(!(pos->linkE = ft_strnum(line, 3)))
-			return (ft_free_all(pos, "strnum E"));
+		if(!(pos->linke = ft_strnum(line, 3)))
+			return (ft_free_all(pos, "erreur map"));
 	if (line[0] == 'W' && line[1] == 'E')
-		if(!(pos->linkW = ft_strnum(line, 3)))
-			return (ft_free_all(pos, "strnum W"));
+		if(!(pos->linkw = ft_strnum(line, 3)))
+			return (ft_free_all(pos, "erreur map"));
 	if (line[0] == 'S' && line[1] == ' ')
 		if(!(pos->linksprite = ft_strnum(line, 2)))
-			return (ft_free_all(pos, "strnum Sprite"));
+			return (ft_free_all(pos, "erreur map"));
 }
 
 int		verifcase(t_pos *pos, int i, int j)
@@ -38,7 +60,7 @@ int		verifcase(t_pos *pos, int i, int j)
 
 	len = 0;
 	if (i > pos->mapheight || i < 0)
-		ft_free_all(pos, "erreur map");
+		ft_free_all(pos, "erreur mapp");
 	while (pos->map[i][len])
 		len++;
 	if (j < 0 || j > len)
@@ -106,7 +128,7 @@ int		verifmap(t_pos *pos)
 	return (1);
 }
 
-int		colorForC(char *string)
+int		color_for_c(char *string)
 {
 	int color;
 	int r;
@@ -145,34 +167,34 @@ void		define(char c, t_pos *pos, int a, int b)
 {
 	if (c == 'N')
 	{
-		pos->dirX = 0;
-		pos->dirY = -1;
-		pos->planeX = 0.66;
-		pos->planeY = 0;
+		pos->dirx = 0;
+		pos->diry = -1;
+		pos->planex = 0.66;
+		pos->planey = 0;
 	}
 	if (c == 'E')
 	{
-		pos->dirX = 1;
-		pos->dirY = 0;
-		pos->planeX = 0;
-		pos->planeY = 0.66;
+		pos->dirx = 1;
+		pos->diry = 0;
+		pos->planex = 0;
+		pos->planey = 0.66;
 	}
 	if (c == 'S')
 	{
-		pos->dirX = 0;
-		pos->dirY = 1;
-		pos->planeX = -0.66;
-		pos->planeY = 0;
+		pos->dirx = 0;
+		pos->diry = 1;
+		pos->planex = -0.66;
+		pos->planey = 0;
 	}
 	if (c == 'W')
 	{
-		pos->dirX = -1;
-		pos->dirY = 0;
-		pos->planeX = 0;
-		pos->planeY = -0.66;
+		pos->dirx = -1;
+		pos->diry = 0;
+		pos->planex = 0;
+		pos->planey = -0.66;
 	}
-	pos->posX = (double)a + 0.1;
-	pos->posY = (double)b + 0.1;
+	pos->posx = (double)a + 0.1;
+	pos->posy = (double)b + 0.1;
 }
 
 int			count(char *cub)
@@ -221,7 +243,7 @@ char		**map(char **cub, int i, t_pos *pos)
 		{
 			if (cub[i][j] == '0' || cub[i][j] == '1' || cub[i][j] == '2' || cub[i][j] == ' ')
 				map[a][b++] = cub[i][j];
-			if (cub[i][j] == 'N' || cub[i][j] == 'S' || cub[i][j] == 'E' ||cub[i][j] == 'W')
+			if (cub[i][j] == 'N' || cub[i][j] == 'S' || cub[i][j] == 'E' || cub[i][j] == 'W')
 			{
 				define(cub[i][j], pos, a, b);
 				map[a][b++] = '0';
@@ -249,6 +271,10 @@ int			sizey(char **cub, int i, int j)
 		n += cub[i][j] - 48;
 		j++;
 	}
+	if (n > 1080)
+		n = 1080;
+	if (n < 0)
+		n = 0;
 	return (n);
 }
 
@@ -268,7 +294,29 @@ int			sizex(t_pos *pos, char **cub, int i)
 		j++;
 	}
 	pos->size_y = sizey(cub, i, j);
+	if (n > 1920)
+		n = 1920;
+	if (n < 0)
+		n = 0;
 	return (n);
+}
+
+int			check_if_map(t_pos *pos, char **map, int i)
+{
+	int n;
+
+	n = 0;
+	if (!pos->linke || !pos->linkn || !pos->links || !pos->linkw || !pos->linksprite)
+		return (0);
+	if (pos->size_x == 0 || pos->size_y == 0 || pos->color_f == 0 || pos->color_c == 0)
+		return (0);
+	while (map[i][n] != '\n' && map[i][n] != '\0')
+	{
+		if (map[i][n++] == '1')
+			return (1);
+		n++;
+	}
+	return (0);
 }
 
 void		check(char **cub, t_pos *pos)
@@ -277,7 +325,7 @@ void		check(char **cub, t_pos *pos)
 
 	i = 0;
 	pos->map = 0;
-	while (pos->map == 0)
+	while (cub[i] != NULL)
 	{
 		if (cub[i][0] == 'R')
 			pos->size_x = sizex(pos, cub, i);
@@ -292,15 +340,19 @@ void		check(char **cub, t_pos *pos)
 		else if (cub[i][0] == 'S' && cub[i][1] == ' ')
 			set_path(pos, cub[i]);
 		else if (cub[i][0] == 'F')
-			pos->colorF = colorForC(cub[i]);
+			pos->color_f = color_for_c(cub[i]);
 		else if (cub[i][0] == 'C')
-			pos->colorC = colorForC(cub[i]);
-		else if (cub[i][0] == '1')
+			pos->color_c = color_for_c(cub[i]);
+		else if (check_if_map(pos, cub, i) == 1)
 		{
 			pos->map = map(cub, i, pos);
+			ft_free_map(pos, cub);
+			return ;
 		}
 		i++;
 	}
+	ft_free_map(pos, cub);
+	ft_free_all(pos, "erreur map");
 }
 
 char		**get_line(int fd)
@@ -322,6 +374,10 @@ int		parser(char **argv, t_pos *pos)
 
 	fd = open(argv[1], O_RDONLY);
 	map = get_line(fd);
+	pos->color_c = 0;
+	pos->color_f = 0;
+	pos->size_x = 0;
+	pos->size_y = 0;
 	check(map, pos);
 	if (verifmap(pos) == 0)
 		ft_free_all(pos, "erreur map");

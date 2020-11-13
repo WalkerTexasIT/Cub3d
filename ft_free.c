@@ -14,34 +14,34 @@
 
 void	free_value(t_pos *pos)
 {
-	if (pos->spriteOrder)
-		free(pos->spriteOrder);
-	if (pos->linkN)
-		free(pos->linkN);
-	if (pos->linkS)
-		free(pos->linkS);
-	if (pos->linkE)
-		free(pos->linkE);
-	if (pos->linkW)
-		free(pos->linkW);
+	if (pos->spriteorder)
+		free(pos->spriteorder);
+	if (pos->linkn)
+		free(pos->linkn);
+	if (pos->links)
+		free(pos->links);
+	if (pos->linke)
+		free(pos->linke);
+	if (pos->linkw)
+		free(pos->linkw);
 	if (pos->linksprite)
 		free(pos->linksprite);
 }
 
-void	ft_free_map(t_pos *pos)
+void	ft_free_map(t_pos *pos, char **map)
 {
 	int i;
 
 	i = 0;
-	if (pos->map)
+	if (map)
 	{
-		while (pos->map[i])
+		while (map[i])
 		{
-			free(pos->map[i]);
+			free(map[i]);
 			//pos->map[i] = NULL;
 			i++;
 		}
-		free(pos->map);
+		free(map);
 	}
 }
 
@@ -60,10 +60,10 @@ void	ft_free_all(t_pos *pos, char *ret)
 {
 	printf("%s\n", ret);
 	free_value(pos);
-	if (ret != "erreur map")
+	if (ft_strncmp(ret, "erreur map", 10))
 		free_all_txt(pos->txt);
-	ft_free_map(pos);
-	if (ret != "erreur map")
+	ft_free_map(pos, pos->map);
+	if (ft_strncmp(ret, "erreur map", 10))
 		mlx_destroy_window(pos->mlx_ptr, pos->win_ptr);
 	exit(0);
 }

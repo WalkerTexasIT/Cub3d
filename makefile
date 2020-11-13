@@ -25,7 +25,7 @@ OBJ = $(SRC:.c=.o)
 all: libft_all $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(CCFLAGS) $(FRAME) $(LIBFT_ROOT)/libft.a $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) -fsanitize=address $(FRAME) $(LIBFT_ROOT)/libft.a $(OBJ) -o $(NAME)
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -c -o $@ $<

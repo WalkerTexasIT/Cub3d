@@ -33,22 +33,22 @@ void	rot(t_pos *pos, char RorL)
 
 	if (RorL == 'R')
 	{
-		swipe1 = pos->dirX;
-		pos->dirX = (pos->dirX * cos(Rotate)) - (pos->dirY * sin(Rotate));
-		pos->dirY = (swipe1 * sin(Rotate)) + (pos->dirY * cos(Rotate));
-		swipe2 = pos->planeX;
-		pos->planeX = (pos->planeX * cos(Rotate)) - (pos->planeY * sin(Rotate));
-		pos->planeY = (swipe2 * sin(Rotate)) + (pos->planeY * cos(Rotate));
+		swipe1 = pos->dirx;
+		pos->dirx = (pos->dirx * cos(Rotate)) - (pos->diry * sin(Rotate));
+		pos->diry = (swipe1 * sin(Rotate)) + (pos->diry * cos(Rotate));
+		swipe2 = pos->planex;
+		pos->planex = (pos->planex * cos(Rotate)) - (pos->planey * sin(Rotate));
+		pos->planey = (swipe2 * sin(Rotate)) + (pos->planey * cos(Rotate));
 		pos->key->key_right = 0;
 	}
 	else
 	{
-		swipe1 = pos->dirX;
-		pos->dirX = (pos->dirX * cos(-Rotate)) - (pos->dirY * sin(-Rotate));
-		pos->dirY = (swipe1 * sin(-Rotate)) + (pos->dirY * cos(-Rotate));
-		swipe2 = pos->planeX;
-		pos->planeX = (pos->planeX * cos(-Rotate)) - (pos->planeY * sin(-Rotate));
-		pos->planeY = (swipe2 * sin(-Rotate)) + (pos->planeY * cos(-Rotate));
+		swipe1 = pos->dirx;
+		pos->dirx = (pos->dirx * cos(-Rotate)) - (pos->diry * sin(-Rotate));
+		pos->diry = (swipe1 * sin(-Rotate)) + (pos->diry * cos(-Rotate));
+		swipe2 = pos->planex;
+		pos->planex = (pos->planex * cos(-Rotate)) - (pos->planey * sin(-Rotate));
+		pos->planey = (swipe2 * sin(-Rotate)) + (pos->planey * cos(-Rotate));
 		pos->key->key_left = 0;
 	}
 }
