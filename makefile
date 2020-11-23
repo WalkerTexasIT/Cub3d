@@ -11,21 +11,24 @@
 # **************************************************************************** #
 
 CC = gcc
-FLAGS = -Werror -Wall -Wextra
+HEADER_PATH = ./inc
+FLAGS = -Werror -Wall -Wextra -fsanitize=address
 LIBFT_ROOT = ./libft
 FRAME = -I minilibx_opengl -framework OpenGl -framework Appkit -L minilibx_opengl -lmlx
 
 NAME = Cub3d
 
-SRC = utils.c		ft_free.c		parser.c		ft_strndup.c \
-		main.c		bmp.c
+SRC = srcs/utils.c		srcs/ft_free.c		srcs/parser.c		srcs/ft_strndup.c \
+		srcs/main.c		srcs/bmp.c			srcs/tex.c			srcs/dda.c \
+		srcs/ddraw.c	srcs/key.c			srcs/parsemap.c		srcs/rgb.c \
+		srcs/sprite.c	srcs/value.c		srcs/spritesecond.c
 OBJ = $(SRC:.c=.o)
 	INCLUDE = cub3d.h mlx.h
 
 all: libft_all $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) $(FLAGS) -fsanitize=address $(FRAME) $(LIBFT_ROOT)/libft.a $(OBJ) -o $(NAME)
+	$(CC) $(FLAGS) $(FRAME) $(LIBFT_ROOT)/libft.a $(OBJ) -o $(NAME) -I $(HEADER_PATH)
 
 %.o: %.c
 	$(CC) $(CCFLAGS) -c -o $@ $<

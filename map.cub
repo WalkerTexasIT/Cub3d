@@ -1,18 +1,18 @@
 R 1080 768
 
-NO ./bluestone.xpm
-SO ./greystone.xpm
-WE ./redbrick.xpm
-EA ./wood.xpm
+NO ./tex/bluestone.xpm
+SO ./tex/greystone.xpm
+WE ./tex/redbrick.xpm
+EA ./tex/wood.xpm
 
-S ./barrel.xpm
-F 220,100,0
-C 225,30,0
+S ./tex/barrel.xpm
+F 233,228,233
+C 17,15,17
 
 11111111
 10001001
-10002011
-11102001
+10022011
+11100001
 10000001
 1000N001
 10000001

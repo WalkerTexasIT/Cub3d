@@ -1,6 +1,6 @@
-#include "cub3d.h"
+#include "../inc/cub3d.h"
 
-static void	set_value(unsigned char *string, int i)
+static void		set_value_bmp(unsigned char *string, int i)
 {
 	string[0] = (unsigned char)(i);
 	string[1] = (unsigned char)(i >> 8);
@@ -8,7 +8,7 @@ static void	set_value(unsigned char *string, int i)
 	string[3] = (unsigned char)(i >> 24);
 }
 
-static int	bmp_header(t_pos *pos, int fd, int size)
+static int		bmp_header(t_pos *pos, int fd, int size)
 {
 	int				i;
 	unsigned char	bmpheader[54];
@@ -18,17 +18,17 @@ static int	bmp_header(t_pos *pos, int fd, int size)
 		bmpheader[i++] = 0;
 	bmpheader[0] = (unsigned char)('B');
 	bmpheader[1] = (unsigned char)('M');
-	set_value(bmpheader + 2, size);
+	set_value_bmp(bmpheader + 2, size);
 	bmpheader[10] = (unsigned char)(54);
 	bmpheader[14] = (unsigned char)(40);
-	set_value(bmpheader + 18, pos->size_x);
-	set_value(bmpheader + 22, pos->size_y);
+	set_value_bmp(bmpheader + 18, pos->size_x);
+	set_value_bmp(bmpheader + 22, pos->size_y);
 	bmpheader[27] = (unsigned char)(1);
 	bmpheader[28] = (unsigned char)(24);
 	return (!(write(fd, bmpheader, 54) < 0));
 }
 
-static int	rgb_data(t_pos *pos, int x, int y)
+static int		rgb_data(t_pos *pos, int x, int y)
 {
 	int		rgb;
 	int		color;
@@ -40,8 +40,7 @@ static int	rgb_data(t_pos *pos, int x, int y)
 	return (rgb);
 }
 
-
-static int	bmp_data(t_pos *pos, int fd, int n)
+static int		bmp_data(t_pos *pos, int fd, int n)
 {
 	const unsigned char		mall[3] = {0, 0, 0};
 	int						i;
@@ -64,7 +63,7 @@ static int	bmp_data(t_pos *pos, int fd, int n)
 	return (1);
 }
 
-void		make_bmp(t_pos *pos)
+void			make_bmp(t_pos *pos)
 {
 	int		fd;
 	int		size;

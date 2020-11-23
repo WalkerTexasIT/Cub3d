@@ -10,7 +10,19 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../inc/cub3d.h"
+
+void	ft_putstr(char *str)
+{
+	int i;
+
+	i = 0;
+	while (str[i] != '\0')
+	{
+		write(1, &str[i], 1);
+		i++;
+	}
+}
 
 int		get_color(char *s)
 {
@@ -26,12 +38,12 @@ int		get_color(char *s)
 	return (ret);
 }
 
-void	rot(t_pos *pos, char RorL)
+void	rot(t_pos *pos, char r_l)
 {
 	double swipe1;
 	double swipe2;
 
-	if (RorL == 'R')
+	if (r_l == 'R')
 	{
 		swipe1 = pos->dirx;
 		pos->dirx = (pos->dirx * cos(Rotate)) - (pos->diry * sin(Rotate));
@@ -47,7 +59,8 @@ void	rot(t_pos *pos, char RorL)
 		pos->dirx = (pos->dirx * cos(-Rotate)) - (pos->diry * sin(-Rotate));
 		pos->diry = (swipe1 * sin(-Rotate)) + (pos->diry * cos(-Rotate));
 		swipe2 = pos->planex;
-		pos->planex = (pos->planex * cos(-Rotate)) - (pos->planey * sin(-Rotate));
+		pos->planex = (pos->planex * cos(-Rotate)) -
+							(pos->planey * sin(-Rotate));
 		pos->planey = (swipe2 * sin(-Rotate)) + (pos->planey * cos(-Rotate));
 		pos->key->key_left = 0;
 	}

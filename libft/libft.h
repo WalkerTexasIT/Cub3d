@@ -48,6 +48,7 @@ void			ft_putstr_fd(char *s, int fd);
 void			ft_putendl_fd(char *s, int fd);
 void			ft_putnbr_fd(int n, int fd);
 char			**ft_split(char const *s, char c);
+int				ft_len(long n);
 char			*ft_itoa(int n);
 char			*ft_strndup(const char *s, size_t n);
 char			*ft_strncpy(char *dest, const char *s, size_t n);

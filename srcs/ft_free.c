@@ -10,7 +10,7 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "cub3d.h"
+#include "../inc/cub3d.h"
 
 void	free_value(t_pos *pos)
 {
@@ -38,7 +38,6 @@ void	ft_free_map(t_pos *pos, char **map)
 		while (map[i])
 		{
 			free(map[i]);
-			//pos->map[i] = NULL;
 			i++;
 		}
 		free(map);
@@ -58,7 +57,8 @@ void	free_all_txt(t_txt *txt)
 
 void	ft_free_all(t_pos *pos, char *ret)
 {
-	printf("%s\n", ret);
+	if (ret[0] != '\n')
+		ft_putstr(ret);
 	free_value(pos);
 	if (ft_strncmp(ret, "erreur map", 10))
 		free_all_txt(pos->txt);
